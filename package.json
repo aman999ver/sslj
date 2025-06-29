@@ -1,0 +1,19 @@
+{
+  "name": "subha-laxmi-jewellery",
+  "version": "1.0.0",
+  "description": "Luxury jewelry e-commerce web application for Subha Laxmi Jewellery, Nepal",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm start",
+    "install-all": "npm install && cd server && npm install && cd ../client && npm install",
+    "build": "cd client && npm run build"
+  },
+  "keywords": ["jewelry", "e-commerce", "nepal", "luxury", "react", "node"],
+  "author": "Subha Laxmi Jewellery",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+} 

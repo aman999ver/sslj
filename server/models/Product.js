@@ -1,0 +1,90 @@
+const mongoose = require('mongoose');
+
+const productSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, 'Product name is required'],
+    trim: true,
+    maxlength: [100, 'Product name cannot exceed 100 characters']
+  },
+  description: {
+    type: String,
+    required: [true, 'Product description is required'],
+    maxlength: [500, 'Description cannot exceed 500 characters']
+  },
+  category: {
+    type: String,
+    required: [true, 'Product category is required'],
+    enum: ['Gold', 'Silver', 'Rings', 'Necklaces', 'Bracelets', 'Earrings', 'Pendants', 'Chains'],
+    default: 'Gold'
+  },
+  metalType: {
+    type: String,
+    required: [true, 'Metal type is required'],
+    enum: ['24K', '22K', 'Silver'],
+    default: '24K'
+  },
+  weight: {
+    type: Number,
+    required: [true, 'Weight in grams is required'],
+    min: [0.1, 'Weight must be at least 0.1 grams']
+  },
+  lossPercentage: {
+    type: Number,
+    default: 0,
+    min: [0, 'Loss percentage cannot be negative'],
+    max: [50, 'Loss percentage cannot exceed 50%']
+  },
+  makingCharge: {
+    type: Number,
+    required: [true, 'Making charge is required'],
+    min: [0, 'Making charge cannot be negative']
+  },
+  images: [{
+    type: String,
+    required: [true, 'At least one product image is required']
+  }],
+  price: {
+    type: Number,
+    default: 0
+  },
+  isActive: {
+    type: Boolean,
+    default: true
+  },
+  featured: {
+    type: Boolean,
+    default: false
+  },
+  sku: {
+    type: String,
+    unique: true,
+    required: true
+  }
+}, {
+  timestamps: true
+});
+
+// Generate SKU before saving
+productSchema.pre('save', function(next) {
+  if (!this.sku) {
+    const timestamp = Date.now().toString().slice(-6);
+    const random = Math.random().toString(36).substring(2, 5).toUpperCase();
+    this.sku = `SLJ-${this.metalType}-${timestamp}-${random}`;
+  }
+  next();
+});
+
+// Calculate price based on metal rates
+productSchema.methods.calculatePrice = function(metalRates) {
+  const rate = metalRates[this.metalType];
+  if (!rate) return 0;
+  
+  const weightWithLoss = this.weight + (this.weight * this.lossPercentage / 100);
+  const weightInTola = weightWithLoss / 11.664; // Convert grams to tola
+  const metalCost = weightInTola * rate;
+  
+  return Math.round(metalCost + this.makingCharge);
+};
+
+module.exports = mongoose.model('Product', productSchema); 
