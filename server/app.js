@@ -9,6 +9,12 @@ require('dotenv').config({ path: './config.env' });
 const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
 const metalRateRoutes = require('./routes/metalRates');
+const clientAuthRoutes = require('./routes/clientAuth');
+const cartRoutes = require('./routes/cart');
+const orderRoutes = require('./routes/orders');
+const adminOrderRoutes = require('./routes/adminOrders');
+const categoryRoutes = require('./routes/categories');
+const inquiriesRoute = require('./routes/inquiries');
 
 const app = express();
 
@@ -55,6 +61,12 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/subha-lax
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/metal-rates', metalRateRoutes);
+app.use('/api/client', clientAuthRoutes);
+app.use('/api/cart', cartRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/admin/orders', adminOrderRoutes);
+app.use('/api', categoryRoutes);
+app.use('/api/inquiries', inquiriesRoute);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -63,6 +75,50 @@ app.get('/api/health', (req, res) => {
     message: 'Subha Laxmi Jewellery API is running',
     timestamp: new Date().toISOString()
   });
+});
+
+// Debug endpoint to check orders - remove in production
+app.get('/api/debug/orders', async (req, res) => {
+  try {
+    const Order = require('./models/Order');
+    const orders = await Order.find({}).populate('user', 'firstName lastName email');
+    res.json({ 
+      success: true, 
+      count: orders.length, 
+      orders: orders.map(o => ({
+        id: o._id,
+        orderNumber: o.orderNumber,
+        user: o.user,
+        totalAmount: o.totalAmount,
+        paymentStatus: o.paymentStatus,
+        orderStatus: o.orderStatus,
+        createdAt: o.createdAt
+      }))
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// Debug endpoint to check admin users - remove in production
+app.get('/api/debug/admins', async (req, res) => {
+  try {
+    const AdminUser = require('./models/AdminUser');
+    const admins = await AdminUser.find({}).select('-password');
+    res.json({ 
+      success: true, 
+      count: admins.length, 
+      admins: admins.map(a => ({
+        id: a._id,
+        username: a.username,
+        email: a.email,
+        role: a.role,
+        isActive: a.isActive
+      }))
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
 });
 
 // Error handling middleware

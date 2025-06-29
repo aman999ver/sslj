@@ -19,6 +19,8 @@ const ProductManagement = () => {
   });
   const [images, setImages] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [selectedProductReviews, setSelectedProductReviews] = useState(null);
+  const [reviewsLoading, setReviewsLoading] = useState(false);
 
   const categories = ['Gold', 'Silver', 'Rings', 'Necklaces', 'Bracelets', 'Earrings', 'Pendants', 'Chains'];
   const metalTypes = ['24K', '22K', 'Silver'];
@@ -127,6 +129,33 @@ const ProductManagement = () => {
     });
     setImages([]);
   };
+
+  const fetchProductReviews = async (productId) => {
+    setReviewsLoading(true);
+    try {
+      const res = await axios.get(`/api/products/${productId}/reviews`);
+      setSelectedProductReviews({ productId, reviews: res.data.reviews });
+    } catch (err) {
+      setSelectedProductReviews({ productId, reviews: [] });
+    } finally {
+      setReviewsLoading(false);
+    }
+  };
+
+  const renderStars = (rating) => (
+    <span className="flex items-center">
+      {[...Array(5)].map((_, i) => (
+        <svg
+          key={i}
+          className={`w-4 h-4 ${i < rating ? 'text-yellow-400' : 'text-gray-300'}`}
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.922-.755 1.688-1.54 1.118l-3.38-2.454a1 1 0 00-1.175 0l-3.38 2.454c-.784.57-1.838-.196-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.05 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z" />
+        </svg>
+      ))}
+    </span>
+  );
 
   if (loading) {
     return (
@@ -419,6 +448,12 @@ const ProductManagement = () => {
                       >
                         Delete
                       </button>
+                      <button
+                        onClick={() => fetchProductReviews(product._id)}
+                        className="text-blue-600 hover:text-blue-800 transition-colors"
+                      >
+                        View Reviews
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -427,6 +462,45 @@ const ProductManagement = () => {
           </table>
         </div>
       </div>
+
+      {/* Render reviews modal/section if selectedProductReviews is set */}
+      {selectedProductReviews && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl shadow-lg p-8 max-w-2xl w-full relative">
+            <button
+              onClick={() => setSelectedProductReviews(null)}
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-2xl"
+            >
+              &times;
+            </button>
+            <h3 className="text-xl font-bold mb-6">Product Reviews</h3>
+            {reviewsLoading ? (
+              <div className="text-center py-8">Loading...</div>
+            ) : selectedProductReviews.reviews.length === 0 ? (
+              <div className="text-gray-500 font-premium">No reviews for this product.</div>
+            ) : (
+              <div className="space-y-6 max-h-96 overflow-y-auto">
+                {selectedProductReviews.reviews.map((rev) => (
+                  <div key={rev._id} className="border-b border-gold-100 pb-4">
+                    <div className="flex items-center space-x-3 mb-2">
+                      <span className="font-premium font-semibold text-gold-700">{rev.user?.firstName || 'Customer'}</span>
+                      {renderStars(rev.rating)}
+                      <span className="text-xs text-gray-400">{new Date(rev.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    <div className="text-gray-700 font-premium mb-1">{rev.comment}</div>
+                    {rev.adminReply && (
+                      <div className="ml-4 mt-2 p-3 bg-gold-50 rounded-lg border-l-4 border-gold-400">
+                        <span className="font-semibold text-gold-700">Admin Reply:</span>
+                        <span className="ml-2 text-gray-700">{rev.adminReply}</span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,130 +1,146 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { adminAuth } from '../utils/auth';
 
 const LoginPage = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [formData, setFormData] = useState({
+    username: '',
+    password: ''
+  });
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [error, setError] = useState('');
 
-  useEffect(() => {
-    // Check if already logged in
-    const token = localStorage.getItem('slj_admin_token');
-    if (token) {
-      navigate('/admin/dashboard');
-    }
-  }, [navigate]);
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     setLoading(true);
+    setError('');
 
     try {
-      const res = await axios.post('/api/auth/login', { username, password });
-      localStorage.setItem('slj_admin_token', res.data.token);
+      const result = await adminAuth.login(formData);
       
-      // Set default auth header for future requests
-      axios.defaults.headers.common['Authorization'] = `Bearer ${res.data.token}`;
-      
-      navigate('/admin/dashboard');
-    } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+      if (result.success) {
+        window.location.href = '/admin/dashboard';
+      } else {
+        setError(result.message || 'Login failed');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-premium-gradient flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="w-20 h-20 bg-luxury-gradient rounded-full flex items-center justify-center mx-auto mb-4 shadow-premium">
-            <span className="text-white font-elegant text-3xl">SL</span>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        {/* Header */}
+        <div className="text-center">
+          <div className="w-16 h-16 bg-blue-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+            <span className="text-white text-2xl font-bold">SL</span>
           </div>
-          <h1 className="text-3xl font-elegant font-bold text-gold-800 mb-2">
-            Subha Laxmi Jewellery
-          </h1>
-          <p className="text-gray-600 font-premium">Admin Panel</p>
+          <h2 className="text-3xl font-bold text-gray-900">
+            Admin Login
+          </h2>
+          <p className="mt-2 text-sm text-gray-600">
+            Sign in to your admin account
+          </p>
         </div>
 
         {/* Login Form */}
-        <div className="bg-white rounded-2xl shadow-luxury p-8 border border-gold-100">
-          <h2 className="text-2xl font-elegant font-bold text-gold-800 mb-6 text-center">
-            Admin Login
-          </h2>
-          
-          {error && (
-            <div className="mb-6 p-4 bg-ruby-50 border border-ruby-200 rounded-lg">
-              <p className="text-ruby-700 font-premium text-sm">{error}</p>
-            </div>
-          )}
+        <div className="bg-white rounded-lg border border-gray-200 p-8">
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-md p-4">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <span className="text-red-400">⚠️</span>
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm text-red-700">{error}</p>
+                  </div>
+                </div>
+              </div>
+            )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-premium font-semibold text-gray-700 mb-2">
-                Username or Email
+              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
+                Username
               </label>
               <input
+                id="username"
+                name="username"
                 type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
                 required
-                disabled={loading}
-                className="w-full border border-gold-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-gold-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
-                placeholder="Enter your username or email"
+                value={formData.username}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Enter your username"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-premium font-semibold text-gray-700 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
                 Password
               </label>
               <input
+                id="password"
+                name="password"
                 type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 required
-                disabled={loading}
-                className="w-full border border-gold-200 rounded-lg px-4 py-3 focus:ring-2 focus:ring-gold-500 focus:border-transparent disabled:opacity-50 disabled:cursor-not-allowed"
+                value={formData.password}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Enter your password"
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-luxury-gradient text-white font-premium font-semibold py-3 rounded-lg hover:shadow-premium transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? (
-                <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                  Signing In...
-                </div>
-              ) : (
-                'Sign In'
-              )}
-            </button>
+            <div>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                {loading ? (
+                  <div className="flex items-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Signing in...
+                  </div>
+                ) : (
+                  'Sign in'
+                )}
+              </button>
+            </div>
           </form>
 
-          <div className="mt-6 text-center">
-            <Link
-              to="/"
-              className="text-gold-600 hover:text-gold-700 font-premium text-sm transition-colors"
-            >
-              ← Back to Website
-            </Link>
+          {/* Additional Info */}
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-200"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">Need help?</span>
+              </div>
+            </div>
+            <div className="mt-4 text-center">
+              <p className="text-xs text-gray-500">
+                Contact your system administrator for access
+              </p>
+            </div>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-8">
-          <p className="text-gray-500 font-premium text-sm">
-            Secure access to Subha Laxmi Jewellery administration
+        <div className="text-center">
+          <p className="text-xs text-gray-500">
+            © 2024 Subha Laxmi Jewellery. All rights reserved.
           </p>
         </div>
       </div>

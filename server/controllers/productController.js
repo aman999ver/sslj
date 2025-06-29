@@ -272,6 +272,51 @@ const getAdminProducts = async (req, res) => {
   }
 };
 
+// Add a review to a product
+const addReview = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const { rating, comment } = req.body;
+    const userId = req.user.userId || req.user._id;
+    const product = await Product.findById(productId);
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+    product.reviews.push({ user: userId, rating, comment });
+    await product.save();
+    res.status(201).json({ success: true, reviews: product.reviews });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to add review' });
+  }
+};
+
+// Get reviews for a product
+const getReviews = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const product = await Product.findById(productId).populate('reviews.user', 'firstName lastName email');
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+    res.json({ success: true, reviews: product.reviews });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to get reviews' });
+  }
+};
+
+// Admin reply to a review
+const replyToReview = async (req, res) => {
+  try {
+    const { productId, reviewId } = req.params;
+    const { reply } = req.body;
+    const product = await Product.findById(productId);
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+    const review = product.reviews.id(reviewId);
+    if (!review) return res.status(404).json({ message: 'Review not found' });
+    review.adminReply = reply;
+    await product.save();
+    res.json({ success: true, review });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to reply to review' });
+  }
+};
+
 module.exports = {
   getAllProducts,
   getProduct,
@@ -279,5 +324,8 @@ module.exports = {
   createProduct,
   updateProduct,
   deleteProduct,
-  getAdminProducts
+  getAdminProducts,
+  addReview,
+  getReviews,
+  replyToReview
 }; 

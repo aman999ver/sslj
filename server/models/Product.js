@@ -59,8 +59,34 @@ const productSchema = new mongoose.Schema({
   sku: {
     type: String,
     unique: true,
-    required: true
-  }
+    // Not required, will be auto-generated in pre-save hook
+  },
+  reviews: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ClientUser',
+        required: true
+      },
+      rating: {
+        type: Number,
+        min: 1,
+        max: 5,
+        required: true
+      },
+      comment: {
+        type: String,
+        required: true
+      },
+      adminReply: {
+        type: String
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now
+      }
+    }
+  ]
 }, {
   timestamps: true
 });
