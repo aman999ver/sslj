@@ -121,6 +121,10 @@ const orderSchema = new mongoose.Schema({
   },
   deliveredAt: {
     type: Date
+  },
+  cancellationCharge: {
+    type: Number,
+    default: 0
   }
 }, {
   timestamps: true

@@ -38,15 +38,15 @@ const ContactPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-luxury-cream to-gold-50">
+    <div className="min-h-screen bg-gradient-to-br from-luxury-cream to-gold-50 px-2 sm:px-4 md:px-8">
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-gold-600 to-gold-800 text-white py-20">
-        <div className="max-w-6xl mx-auto px-4">
+      <div className="relative bg-gradient-to-r from-gold-600 to-gold-800 text-white py-12 sm:py-20">
+        <div className="max-w-6xl mx-auto px-2 sm:px-4">
           <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+            <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6">
               Contact Us
             </h1>
-            <p className="text-xl md:text-2xl text-gold-100 max-w-3xl mx-auto">
+            <p className="text-base sm:text-xl md:text-2xl text-gold-100 max-w-3xl mx-auto">
               Get in touch with us for any inquiries, custom orders, or to visit our store
             </p>
           </div>
@@ -110,10 +110,7 @@ const ContactPage = () => {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-gray-800 mb-2">Business Hours</h3>
-                  <div className="space-y-1 text-gray-600">
-                    <p>Monday - Saturday: 10:00 AM - 8:00 PM</p>
-                    <p>Sunday: 11:00 AM - 6:00 PM</p>
-                  </div>
+                  <span className="block text-sm text-gray-700">Sunday - Friday, 10:00 AM - 6:00 PM</span>
                 </div>
               </div>
             </div>
@@ -147,7 +144,7 @@ const ContactPage = () => {
               <h3 className="text-xl font-bold text-gray-800 mb-4">Follow Us</h3>
               <div className="grid grid-cols-2 gap-4">
                 <a 
-                  href="https://facebook.com/subhalaxmijewellery" 
+                  href="https://www.facebook.com/share/1BJ3BYHT2K/?mibextid=wwXIfr" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
@@ -160,20 +157,18 @@ const ContactPage = () => {
                   <span className="text-gray-700 font-medium">Facebook</span>
                 </a>
                 <a 
-                  href="https://instagram.com/subhalaxmijewellery" 
+                  href="https://www.instagram.com/shree_subha_laxmi?igsh=cGVoc20xM3I2ZWNy&utm_source=qr" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="flex items-center space-x-3 p-3 bg-pink-50 rounded-lg hover:bg-pink-100 transition-colors"
                 >
                   <div className="w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center">
-                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.62 5.367 11.987 11.988 11.987 6.62 0 11.987-5.367 11.987-11.987C24.014 5.367 18.637.001 12.017.001zM8.449 16.988c-1.297 0-2.448-.49-3.323-1.297C4.198 14.895 3.708 13.744 3.708 12.447s.49-2.448 1.418-3.323c.875-.807 2.026-1.297 3.323-1.297s2.448.49 3.323 1.297c.928.875 1.418 2.026 1.418 3.323s-.49 2.448-1.418 3.244c-.875.807-2.026 1.297-3.323 1.297zm7.718-1.297c-.875.807-2.026 1.297-3.323 1.297s-2.448-.49-3.323-1.297c-.928-.796-1.418-1.947-1.418-3.244s.49-2.448 1.418-3.323c.875-.807 2.026-1.297 3.323-1.297s2.448.49 3.323 1.297c.928.875 1.418 2.026 1.418 3.323s-.49 2.448-1.418 3.244zm-7.718-6.62c-1.297 0-2.448.49-3.323 1.297-.928.875-1.418 2.026-1.418 3.323s.49 2.448 1.418 3.323c.875.807 2.026 1.297 3.323 1.297s2.448-.49 3.323-1.297c.928-.875 1.418-2.026 1.418-3.323s-.49-2.448-1.418-3.323c-.875-.807-2.026-1.297-3.323-1.297z"/>
-                    </svg>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" className="w-6 h-6" />
                   </div>
                   <span className="text-gray-700 font-medium">Instagram</span>
                 </a>
                 <a 
-                  href="https://tiktok.com/@subhalaxmijewellery" 
+                  href="https://www.tiktok.com/@subha_laxmi_jewellery?_t=ZS-8xbzlzqC6Qm&_r=1" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"

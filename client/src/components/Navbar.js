@@ -48,8 +48,8 @@ const Navbar = () => {
         ? 'bg-white/95 backdrop-blur-md shadow-luxury' 
         : 'bg-transparent'
     }`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
+        <div className="flex justify-between items-center h-16 sm:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <div className="w-10 h-10 bg-luxury-gradient rounded-full flex items-center justify-center shadow-gold">

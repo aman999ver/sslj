@@ -35,8 +35,8 @@ const InquiryManagement = () => {
   };
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">All Inquiries</h1>
+    <div className="p-2 sm:p-4 md:p-6">
+      <h1 className="text-lg sm:text-xl md:text-2xl font-bold mb-4 sm:mb-6 text-gray-800">All Inquiries</h1>
       {loading ? (
         <div className="flex justify-center items-center h-32">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -45,28 +45,28 @@ const InquiryManagement = () => {
         <div className="text-red-500 font-semibold">{error}</div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
+          <table className="min-w-full divide-y divide-gray-200 text-xs sm:text-sm">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Message</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Received</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                <th className="px-2 sm:px-4 py-2 text-left font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Name</th>
+                <th className="px-2 sm:px-4 py-2 text-left font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Email</th>
+                <th className="px-2 sm:px-4 py-2 text-left font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Phone</th>
+                <th className="px-2 sm:px-4 py-2 text-left font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Subject</th>
+                <th className="px-2 sm:px-4 py-2 text-left font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Message</th>
+                <th className="px-2 sm:px-4 py-2 text-left font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Received</th>
+                <th className="px-2 sm:px-4 py-2 text-left font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap">Action</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {inquiries.map(inquiry => (
                 <tr key={inquiry._id}>
-                  <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{inquiry.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{inquiry.email}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{inquiry.phone || '-'}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{inquiry.subject || '-'}</td>
-                  <td className="px-6 py-4 whitespace-pre-line max-w-xs">{inquiry.message}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-xs text-gray-500">{new Date(inquiry.createdAt).toLocaleString()}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-2 sm:px-4 py-2 whitespace-nowrap font-medium text-gray-900">{inquiry.name}</td>
+                  <td className="px-2 sm:px-4 py-2 whitespace-nowrap">{inquiry.email}</td>
+                  <td className="px-2 sm:px-4 py-2 whitespace-nowrap">{inquiry.phone || '-'}</td>
+                  <td className="px-2 sm:px-4 py-2 whitespace-nowrap">{inquiry.subject || '-'}</td>
+                  <td className="px-2 sm:px-4 py-2 whitespace-pre-line max-w-[120px] sm:max-w-xs truncate">{inquiry.message}</td>
+                  <td className="px-2 sm:px-4 py-2 whitespace-nowrap text-xs text-gray-500">{new Date(inquiry.createdAt).toLocaleString()}</td>
+                  <td className="px-2 sm:px-4 py-2 whitespace-nowrap">
                     <button
                       className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs font-semibold disabled:opacity-50"
                       onClick={() => handleDelete(inquiry._id)}

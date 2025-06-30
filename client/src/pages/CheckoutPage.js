@@ -28,6 +28,9 @@ const CheckoutPage = () => {
   const [transactionId, setTransactionId] = useState('');
   const [paymentGateway, setPaymentGateway] = useState('');
   const [paymentNotes, setPaymentNotes] = useState('');
+  const [paymentMethods, setPaymentMethods] = useState([]);
+  const [methodsLoading, setMethodsLoading] = useState(true);
+  const [methodsError, setMethodsError] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem('clientToken');
@@ -51,6 +54,19 @@ const CheckoutPage = () => {
         }
       })
       .catch(err => console.error('Failed to load user:', err));
+
+    // Fetch payment methods
+    fetch('/api/payment-methods')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setPaymentMethods(data.methods);
+        } else {
+          setMethodsError('Failed to load payment methods');
+        }
+      })
+      .catch(() => setMethodsError('Failed to load payment methods'))
+      .finally(() => setMethodsLoading(false));
   }, [navigate]);
 
   useEffect(() => {
@@ -81,11 +97,11 @@ const CheckoutPage = () => {
   const validatePaymentDetails = () => {
     if (paymentMethod === 'ESEWA' || paymentMethod === 'BANK_TRANSFER') {
       if (!paymentScreenshot) {
-        alert('Please upload payment screenshot');
+        window.alert('Please upload payment screenshot');
         return false;
       }
       if (!transactionId.trim()) {
-        alert('Please enter transaction ID');
+        window.alert('Please enter transaction ID');
         return false;
       }
     }
@@ -127,19 +143,22 @@ const CheckoutPage = () => {
 
       const data = await response.json();
       if (data.success) {
-        alert('Order placed successfully!');
+        window.alert('Order placed successfully!');
         clearCart();
         navigate('/orders');
       } else {
-        alert(data.message || 'Failed to place order');
+        window.alert(data.message || 'Failed to place order');
       }
     } catch (error) {
       console.error('Failed to place order:', error);
-      alert('Failed to place order');
+      window.alert('Failed to place order');
     } finally {
       setOrderLoading(false);
     }
   };
+
+  // Helper to get method by type
+  const getMethodByType = (type) => paymentMethods.find(m => m.type && m.type.toLowerCase() === type.toLowerCase());
 
   if (loading || !user) {
     return (
@@ -173,7 +192,11 @@ const CheckoutPage = () => {
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-6xl mx-auto px-4">
         <h1 className="text-3xl font-bold text-gray-800 mb-8">Checkout</h1>
-
+        {methodsLoading ? (
+          <div className="text-center py-8">Loading payment methods...</div>
+        ) : methodsError ? (
+          <div className="text-center text-red-600 py-8">{methodsError}</div>
+        ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Checkout Form */}
           <div className="space-y-6">
@@ -307,76 +330,81 @@ const CheckoutPage = () => {
                     <div className="text-sm text-gray-600">Pay when you receive your order</div>
                   </div>
                 </label>
-
                 {/* eSewa Payment */}
-                <label className="flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="ESEWA"
-                    checked={paymentMethod === 'ESEWA'}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
-                    className="mr-3"
-                  />
-                  <div>
-                    <div className="font-semibold text-gray-800">eSewa Payment</div>
-                    <div className="text-sm text-gray-600">Pay securely through eSewa</div>
-                  </div>
-                </label>
-
+                {getMethodByType('eSewa') && (
+                  <label className="flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="ESEWA"
+                      checked={paymentMethod === 'ESEWA'}
+                      onChange={(e) => setPaymentMethod(e.target.value)}
+                      className="mr-3"
+                    />
+                    <div>
+                      <div className="font-semibold text-gray-800">eSewa Payment</div>
+                      <div className="text-sm text-gray-600">Pay securely through eSewa</div>
+                    </div>
+                  </label>
+                )}
                 {/* Bank Transfer */}
-                <label className="flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="BANK_TRANSFER"
-                    checked={paymentMethod === 'BANK_TRANSFER'}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
-                    className="mr-3"
-                  />
-                  <div>
-                    <div className="font-semibold text-gray-800">Bank Transfer</div>
-                    <div className="text-sm text-gray-600">Transfer to our bank account</div>
-                  </div>
-                </label>
+                {getMethodByType('Bank') && (
+                  <label className="flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="BANK_TRANSFER"
+                      checked={paymentMethod === 'BANK_TRANSFER'}
+                      onChange={(e) => setPaymentMethod(e.target.value)}
+                      className="mr-3"
+                    />
+                    <div>
+                      <div className="font-semibold text-gray-800">Bank Transfer</div>
+                      <div className="text-sm text-gray-600">Transfer to our bank account</div>
+                    </div>
+                  </label>
+                )}
               </div>
-
               {/* Payment Details */}
-              {paymentMethod === 'BANK_TRANSFER' && (
+              {paymentMethod === 'BANK_TRANSFER' && getMethodByType('Bank') && (
                 <div className="mt-4 p-4 bg-blue-50 rounded-lg">
                   <h3 className="font-semibold text-blue-800 mb-2">Bank Details for Transfer</h3>
                   <div className="text-sm text-blue-700 space-y-1">
-                    <p><strong>Bank:</strong> Nepal Bank Limited</p>
-                    <p><strong>Account Name:</strong> Subha Laxmi Jewellery</p>
-                    <p><strong>Account Number:</strong> 1234567890</p>
-                    <p><strong>Branch:</strong> Kathmandu Main Branch</p>
-                    <p><strong>SWIFT Code:</strong> NEPBNPKA</p>
+                    <p><strong>Bank:</strong> {getMethodByType('Bank').bankName}</p>
+                    <p><strong>Account Name:</strong> {getMethodByType('Bank').accountHolder}</p>
+                    <p><strong>Account Number:</strong> {getMethodByType('Bank').accountNumber}</p>
                   </div>
-                  <div className="mt-4 text-center">
-                    <div className="w-32 h-32 bg-white border-2 border-dashed border-blue-300 rounded-lg mx-auto flex items-center justify-center">
-                      <span className="text-blue-500 text-xs">QR Code</span>
+                  {getMethodByType('Bank').qrCode && (
+                    <div className="mt-4 text-center">
+                      <img
+                        src={getMethodByType('Bank').qrCode}
+                        alt="Bank QR Code"
+                        className="w-32 h-32 object-contain border border-blue-300 rounded-lg mx-auto"
+                      />
+                      <p className="text-xs text-blue-600 mt-2">Scan this QR code to pay</p>
                     </div>
-                    <p className="text-xs text-blue-600 mt-2">Scan this QR code to pay</p>
-                  </div>
+                  )}
                 </div>
               )}
-
-              {paymentMethod === 'ESEWA' && (
+              {paymentMethod === 'ESEWA' && getMethodByType('eSewa') && (
                 <div className="mt-4 p-4 bg-green-50 rounded-lg">
                   <h3 className="font-semibold text-green-800 mb-2">eSewa Payment Details</h3>
                   <div className="text-sm text-green-700 space-y-1">
-                    <p><strong>eSewa ID:</strong> 9851234567</p>
-                    <p><strong>Merchant Name:</strong> Subha Laxmi Jewellery</p>
+                    <p><strong>eSewa ID:</strong> {getMethodByType('eSewa').accountNumber}</p>
+                    <p><strong>Merchant Name:</strong> {getMethodByType('eSewa').accountHolder}</p>
                   </div>
-                  <div className="mt-4 text-center">
-                    <div className="w-32 h-32 bg-white border-2 border-dashed border-green-300 rounded-lg mx-auto flex items-center justify-center">
-                      <span className="text-green-500 text-xs">eSewa QR</span>
+                  {getMethodByType('eSewa').qrCode && (
+                    <div className="mt-4 text-center">
+                      <img
+                        src={getMethodByType('eSewa').qrCode}
+                        alt="eSewa QR"
+                        className="w-32 h-32 object-contain border border-green-300 rounded-lg mx-auto"
+                      />
+                      <p className="text-xs text-green-600 mt-2">Scan with eSewa app to pay</p>
                     </div>
-                    <p className="text-xs text-green-600 mt-2">Scan with eSewa app to pay</p>
-                  </div>
+                  )}
                 </div>
               )}
-
               {/* Payment Screenshot Upload for eSewa and Bank Transfer */}
               {(paymentMethod === 'ESEWA' || paymentMethod === 'BANK_TRANSFER') && (
                 <div className="mt-4 p-4 bg-yellow-50 rounded-lg">
@@ -530,6 +558,7 @@ const CheckoutPage = () => {
             </div>
           </div>
         </div>
+        )}
       </div>
     </div>
   );

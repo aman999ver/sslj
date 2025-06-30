@@ -7,6 +7,7 @@
     "start": "node app.js",
     "dev": "nodemon app.js",
     "create-admin": "node scripts/createAdmin.js"
+  
   },
   "dependencies": {
     "express": "^4.18.2",

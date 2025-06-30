@@ -2,15 +2,15 @@ import React from 'react';
 
 const AboutPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-luxury-cream to-gold-50">
+    <div className="min-h-screen bg-gradient-to-br from-luxury-cream to-gold-50 px-2 sm:px-4 md:px-8">
       {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-gold-600 to-gold-800 text-white py-20">
-        <div className="max-w-6xl mx-auto px-4">
+      <div className="relative bg-gradient-to-r from-gold-600 to-gold-800 text-white py-12 sm:py-20">
+        <div className="max-w-6xl mx-auto px-2 sm:px-4">
           <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+            <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6">
               About Subha Laxmi Jewellery
             </h1>
-            <p className="text-xl md:text-2xl text-gold-100 max-w-3xl mx-auto">
+            <p className="text-base sm:text-xl md:text-2xl text-gold-100 max-w-3xl mx-auto">
               Crafting timeless elegance and preserving precious moments since our establishment
             </p>
           </div>

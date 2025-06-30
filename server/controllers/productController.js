@@ -1,6 +1,15 @@
 const Product = require('../models/Product');
 const MetalRate = require('../models/MetalRate');
 
+const toProductObjectWithAbsoluteImageUrls = (product, req) => {
+    const baseUrl = process.env.SERVER_URL || `${req.protocol}://${req.get('host')}`;
+    const productObj = product.toObject();
+    if (productObj.images && Array.isArray(productObj.images)) {
+        productObj.images = productObj.images.map(image => `${baseUrl}${image}`);
+    }
+    return productObj;
+};
+
 // Get all products (public)
 const getAllProducts = async (req, res) => {
   try {
@@ -35,7 +44,7 @@ const getAllProducts = async (req, res) => {
 
     // Calculate prices for each product
     const productsWithPrices = products.map(product => {
-      const productObj = product.toObject();
+      const productObj = toProductObjectWithAbsoluteImageUrls(product, req);
       productObj.price = product.calculatePrice(ratesMap);
       return productObj;
     });
@@ -77,7 +86,7 @@ const getProduct = async (req, res) => {
       ratesMap[rate.metalType] = rate.ratePerTola;
     });
 
-    const productObj = product.toObject();
+    const productObj = toProductObjectWithAbsoluteImageUrls(product, req);
     productObj.price = product.calculatePrice(ratesMap);
 
     res.json({
@@ -108,7 +117,7 @@ const getFeaturedProducts = async (req, res) => {
 
     // Calculate prices
     const productsWithPrices = products.map(product => {
-      const productObj = product.toObject();
+      const productObj = toProductObjectWithAbsoluteImageUrls(product, req);
       productObj.price = product.calculatePrice(ratesMap);
       return productObj;
     });
@@ -249,16 +258,20 @@ const getAdminProducts = async (req, res) => {
     const { page = 1, limit = 20 } = req.query;
     const skip = (page - 1) * limit;
 
-    const products = await Product.find()
+    const products = await Product.find({})
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(parseInt(limit));
 
-    const total = await Product.countDocuments();
+    const total = await Product.countDocuments({});
+    
+    const productsWithFullImagePaths = products.map(product => {
+      return toProductObjectWithAbsoluteImageUrls(product, req);
+    });
 
     res.json({
       success: true,
-      products,
+      products: productsWithFullImagePaths,
       pagination: {
         currentPage: parseInt(page),
         totalPages: Math.ceil(total / limit),

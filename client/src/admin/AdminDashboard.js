@@ -10,6 +10,7 @@ import PaymentVerification from './PaymentVerification';
 import CategoryManagement from './CategoryManagement';
 import ClientManagement from './ClientManagement';
 import InquiryManagement from './InquiryManagement';
+import PaymentMethodsManagement from './PaymentMethodsManagement';
 import axios from 'axios';
 
 const AdminDashboard = () => {
@@ -87,6 +88,7 @@ const AdminDashboard = () => {
     { name: 'Sales Analytics', path: '/admin/dashboard/analytics', icon: '📈' },
     { name: 'Clients', path: '/admin/dashboard/clients', icon: '👤' },
     { name: 'Inquiries', path: '/admin/dashboard/inquiries', icon: '❓' },
+    { name: 'Payment Methods', path: '/admin/dashboard/payment-methods', icon: '🏦' },
   ];
 
   return (
@@ -212,6 +214,7 @@ const AdminDashboard = () => {
               <Route path="/analytics" element={<SalesAnalytics />} />
               <Route path="/clients" element={<ClientManagement />} />
               <Route path="/inquiries" element={<InquiryManagement />} />
+              <Route path="payment-methods" element={<PaymentMethodsManagement />} />
             </Routes>
           </div>
         </main>

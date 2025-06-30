@@ -99,9 +99,20 @@ exports.updateOrderStatus = async (req, res) => {
       order.deliveredAt = new Date();
     }
     
+    // If status is "Cancelled" and payment method is COD, set cancellationCharge
+    let cancellationChargeApplied = false;
+    if (orderStatus === 'Cancelled' && order.paymentMethod === 'COD') {
+      order.cancellationCharge = Math.round(order.totalAmount * 0.2);
+      cancellationChargeApplied = true;
+    }
+    
     await order.save();
     
-    res.json({ success: true, message: 'Order status updated successfully', order });
+    res.json({ 
+      success: true, 
+      message: 'Order status updated successfully' + (cancellationChargeApplied ? ' (20% cancellation charge applied for COD)' : ''), 
+      order 
+    });
   } catch (error) {
     console.error('Update order status error:', error);
     res.status(500).json({ success: false, message: 'Failed to update order status' });
