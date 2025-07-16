@@ -33,42 +33,51 @@ const ClientLoginPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Customer Login</h2>
-        {error && <div className="mb-4 text-red-600 text-center">{error}</div>}
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-neutral-50 px-2 sm:px-4 py-12 fade-in-section">
+      <div className="bg-white rounded-2xl shadow-gold border-4 border-gold-400 p-6 sm:p-10 w-full max-w-md shimmer-gold">
+        <div className="flex flex-col items-center mb-6">
+          <img src="/logo.png" alt="Subha Laxmi Logo" className="w-20 h-20 mb-2" />
+          <h2 className="text-3xl font-luxury font-bold text-luxury-brown mb-2 text-center">Customer Login</h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-gold-300 via-gold-500 to-gold-300 rounded-full mb-2 opacity-70"></div>
+        </div>
+        {error && <div className="mb-4 text-red-600 text-center font-luxury">{error}</div>}
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block mb-1 font-medium">Email</label>
+            <label className="block mb-1 font-luxury font-semibold text-luxury-brown">Email</label>
             <input
               type="email"
-              className="w-full border border-gray-300 rounded px-3 py-2"
+              className="w-full px-4 py-3 border border-gold-200 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent font-luxury text-luxury-brown bg-white/80 placeholder-luxury-brown"
               value={email}
               onChange={e => setEmail(e.target.value)}
               required
+              placeholder="Enter your email"
             />
           </div>
           <div>
-            <label className="block mb-1 font-medium">Password</label>
+            <label className="block mb-1 font-luxury font-semibold text-luxury-brown">Password</label>
             <input
               type="password"
-              className="w-full border border-gray-300 rounded px-3 py-2"
+              className="w-full px-4 py-3 border border-gold-200 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent font-luxury text-luxury-brown bg-white/80 placeholder-luxury-brown"
               value={password}
               onChange={e => setPassword(e.target.value)}
               required
+              placeholder="Enter your password"
             />
+            <div className="flex justify-end mt-1">
+              <Link to="/forgot-password" className="text-gold-600 hover:underline font-luxury text-sm font-semibold">Forgot password?</Link>
+            </div>
           </div>
           <button
             type="submit"
-            className="w-full bg-gold-600 text-white py-2 rounded font-semibold hover:bg-gold-700 transition"
+            className="w-full bg-luxury-brown text-white py-3 rounded-xl font-luxury font-semibold shadow hover:bg-luxury-brown/90 transition text-lg mt-2"
             disabled={loading}
           >
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
-        <div className="mt-4 text-center">
-          <span>Don't have an account? </span>
-          <Link to="/register" className="text-gold-600 hover:underline">Register</Link>
+        <div className="mt-6 text-center font-luxury">
+          <span className="text-luxury-brown/80">Don't have an account? </span>
+          <Link to="/register" className="text-gold-600 hover:underline font-semibold">Register</Link>
         </div>
       </div>
     </div>

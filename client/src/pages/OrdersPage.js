@@ -123,23 +123,23 @@ const OrdersPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-white luxury-bg-pattern flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading orders...</p>
+          <p className="mt-4 text-luxury-brown font-luxury">Loading orders...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-6xl mx-auto px-4">
+    <div className="min-h-screen bg-white luxury-bg-pattern py-10 mt-12">
+      <div className="max-w-6xl mx-auto px-2 sm:px-4 md:px-8">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">My Orders</h1>
+          <h1 className="text-3xl md:text-4xl font-luxury font-bold text-luxury-brown">My Orders</h1>
           <button
             onClick={() => navigate('/products')}
-            className="bg-gold-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-gold-700 transition"
+            className="bg-gold-600 text-white px-6 py-2 rounded-lg font-luxury font-semibold hover:bg-gold-700 transition"
           >
             Continue Shopping
           </button>
@@ -150,38 +150,38 @@ const OrdersPage = () => {
             <div className="w-24 h-24 bg-gold-200 rounded-full flex items-center justify-center mx-auto mb-6">
               <span className="text-3xl">📦</span>
             </div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">No orders yet</h2>
-            <p className="text-gray-600 mb-6">Start shopping to see your orders here</p>
+            <h2 className="text-2xl font-luxury font-bold text-luxury-brown mb-2">No orders yet</h2>
+            <p className="text-luxury-brown/80 mb-6 font-luxury">Start shopping to see your orders here</p>
             <button
               onClick={() => navigate('/products')}
-              className="bg-gold-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gold-700 transition"
+              className="bg-gold-600 text-white px-6 py-3 rounded-lg font-luxury font-semibold hover:bg-gold-700 transition"
             >
               Browse Products
             </button>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-8">
             {orders.map((order) => (
-              <div key={order._id} className="bg-white rounded-lg shadow-md overflow-hidden">
+              <div key={order._id} className="bg-white rounded-2xl shadow-lg border-2 border-luxury-brown overflow-hidden">
                 {/* Order Header */}
-                <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                <div className="bg-gold-50 px-6 py-4 border-b border-gold-100">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-800">Order #{order.orderNumber}</h3>
-                      <p className="text-sm text-gray-600">
+                      <h3 className="text-lg font-luxury font-semibold text-luxury-brown">Order #{order.orderNumber}</h3>
+                      <p className="text-sm text-luxury-brown/80 font-luxury">
                         Placed on {new Date(order.createdAt).toLocaleDateString()}
                       </p>
                     </div>
                     <div className="flex flex-wrap gap-2 mt-2 sm:mt-0">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(order.orderStatus)}`}>
+                      <span className={`px-3 py-1 rounded-full text-xs font-luxury font-semibold ${getStatusColor(order.orderStatus)}`}>
                         {order.orderStatus}
                       </span>
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getPaymentStatusColor(order.paymentStatus)}`}>
+                      <span className={`px-3 py-1 rounded-full text-xs font-luxury font-semibold ${getPaymentStatusColor(order.paymentStatus)}`}>
                         {order.paymentStatus}
                       </span>
                       <button
                         onClick={() => openTrackingModal(order)}
-                        className="px-3 py-1 bg-blue-600 text-white rounded-full text-xs font-semibold hover:bg-blue-700 transition"
+                        className="px-3 py-1 bg-luxury-brown text-white rounded-full text-xs font-luxury font-semibold hover:bg-luxury-brown/90 transition"
                       >
                         Track Order
                       </button>
@@ -197,29 +197,29 @@ const OrdersPage = () => {
                         <img
                           src={item.product?.images?.[0] || '/placeholder-image.jpg'}
                           alt={item.product?.name || 'Product'}
-                          className="w-16 h-16 object-cover rounded-lg"
+                          className="w-16 h-16 object-cover rounded-xl border border-gold-100 bg-white shadow-sm"
                         />
                         <div className="flex-1">
-                          <h4 className="font-semibold text-gray-800">{item.product?.name || 'Product'}</h4>
-                          <p className="text-sm text-gray-600">
+                          <h4 className="font-luxury font-semibold text-luxury-brown">{item.product?.name || 'Product'}</h4>
+                          <p className="text-sm text-luxury-brown/80 font-luxury">
                             {item.product?.category || 'Category'} | {item.product?.metalType || 'Metal'}
                           </p>
-                          <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
+                          <p className="text-sm text-luxury-brown/70 font-luxury">Qty: {item.quantity}</p>
                         </div>
                         <div className="text-right">
-                          <p className="font-semibold text-gray-800">NPR {item.totalPrice.toLocaleString()}</p>
+                          <p className="font-semibold text-gold-600 font-luxury">NPR {item.totalPrice.toLocaleString()}</p>
                         </div>
                       </div>
                     ))}
                   </div>
 
                   {/* Order Details */}
-                  <div className="mt-6 pt-6 border-t border-gray-200">
+                  <div className="mt-6 pt-6 border-t border-gold-100">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {/* Shipping Address */}
                       <div>
-                        <h4 className="font-semibold text-gray-800 mb-2">Shipping Address</h4>
-                        <div className="text-sm text-gray-600">
+                        <h4 className="font-luxury font-semibold text-luxury-brown mb-2">Shipping Address</h4>
+                        <div className="text-sm text-luxury-brown/80 font-luxury">
                           <p>{order.shippingAddress.street}</p>
                           <p>{order.shippingAddress.city}, {order.shippingAddress.state}</p>
                           <p>Pincode: {order.shippingAddress.pincode}</p>
@@ -228,8 +228,8 @@ const OrdersPage = () => {
 
                       {/* Payment Details */}
                       <div>
-                        <h4 className="font-semibold text-gray-800 mb-2">Payment Details</h4>
-                        <div className="text-sm text-gray-600">
+                        <h4 className="font-luxury font-semibold text-luxury-brown mb-2">Payment Details</h4>
+                        <div className="text-sm text-luxury-brown/80 font-luxury">
                           <p><strong>Method:</strong> {order.paymentMethod}</p>
                           <p><strong>Status:</strong> {order.paymentStatus}</p>
                           {order.paymentDetails?.transactionId && (
@@ -266,21 +266,21 @@ const OrdersPage = () => {
                     {/* Order Notes */}
                     {order.notes && (
                       <div className="mt-4">
-                        <h4 className="font-semibold text-gray-800 mb-2">Order Notes</h4>
-                        <p className="text-sm text-gray-600">{order.notes}</p>
+                        <h4 className="font-luxury font-semibold text-luxury-brown mb-2">Order Notes</h4>
+                        <p className="text-sm text-luxury-brown/80 font-luxury">{order.notes}</p>
                       </div>
                     )}
 
                     {/* Order Total */}
-                    <div className="mt-6 pt-4 border-t border-gray-200">
+                    <div className="mt-6 pt-4 border-t border-gold-100">
                       <div className="flex justify-between items-center">
-                        <div className="text-sm text-gray-600">
+                        <div className="text-sm text-luxury-brown/80 font-luxury">
                           <p>Subtotal: NPR {order.subtotal.toLocaleString()}</p>
                           <p>Shipping: Free</p>
                           <p>Tax: NPR {order.tax.toLocaleString()}</p>
                         </div>
                         <div className="text-right">
-                          <p className="text-lg font-bold text-gold-600">
+                          <p className="text-lg font-bold text-gold-600 font-luxury">
                             Total: NPR {order.totalAmount.toLocaleString()}
                           </p>
                         </div>
@@ -297,22 +297,21 @@ const OrdersPage = () => {
       {/* Order Tracking Modal */}
       {showTrackingModal && selectedOrder && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-lg border-2 border-luxury-brown p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-semibold text-gray-900">
+              <h3 className="text-xl font-luxury font-semibold text-luxury-brown">
                 Order Tracking - #{selectedOrder.orderNumber}
               </h3>
               <button
                 onClick={() => setShowTrackingModal(false)}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-luxury-brown/60 hover:text-luxury-brown"
               >
                 ✕
               </button>
             </div>
-            
             {/* Order Summary */}
-            <div className="bg-gray-50 rounded-lg p-4 mb-6">
-              <div className="grid grid-cols-2 gap-4 text-sm">
+            <div className="bg-gold-50 rounded-xl p-4 mb-6 border border-gold-100">
+              <div className="grid grid-cols-2 gap-4 text-sm font-luxury text-luxury-brown">
                 <div>
                   <p><strong>Order Date:</strong> {new Date(selectedOrder.createdAt).toLocaleDateString()}</p>
                   <p><strong>Payment Method:</strong> {selectedOrder.paymentMethod}</p>
@@ -330,20 +329,20 @@ const OrdersPage = () => {
 
             {/* Order Timeline */}
             <div className="mb-6">
-              <h4 className="font-semibold text-gray-900 mb-4">Order Timeline</h4>
+              <h4 className="font-luxury font-semibold text-luxury-brown mb-4">Order Timeline</h4>
               <div className="space-y-4">
                 {getOrderTimeline(selectedOrder).map((step, index) => (
                   <div key={index} className="flex items-start space-x-4">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm ${
-                      step.completed ? 'bg-green-500 text-white' : 'bg-gray-300 text-gray-600'
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-luxury ${
+                      step.completed ? 'bg-gold-500 text-white' : 'bg-gold-100 text-luxury-brown'
                     }`}>
                       {step.icon}
                     </div>
                     <div className="flex-1">
-                      <p className={`font-medium ${step.completed ? 'text-gray-900' : 'text-gray-500'}`}>
+                      <p className={`font-luxury font-medium ${step.completed ? 'text-luxury-brown' : 'text-luxury-brown/60'}`}>
                         {step.status}
                       </p>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-luxury-brown/70 font-luxury">
                         {step.date.toLocaleDateString()} at {step.date.toLocaleTimeString()}
                       </p>
                     </div>
@@ -355,9 +354,9 @@ const OrdersPage = () => {
             {/* Payment Details */}
             {selectedOrder.paymentDetails && (
               <div className="mb-6">
-                <h4 className="font-semibold text-gray-900 mb-4">Payment Details</h4>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <div className="grid grid-cols-2 gap-4 text-sm">
+                <h4 className="font-luxury font-semibold text-luxury-brown mb-4">Payment Details</h4>
+                <div className="bg-gold-50 rounded-xl p-4 border border-gold-100">
+                  <div className="grid grid-cols-2 gap-4 text-sm font-luxury text-luxury-brown">
                     {selectedOrder.paymentDetails.transactionId && (
                       <p><strong>Transaction ID:</strong> {selectedOrder.paymentDetails.transactionId}</p>
                     )}
@@ -382,11 +381,11 @@ const OrdersPage = () => {
 
             {/* Shipping Address */}
             <div>
-              <h4 className="font-semibold text-gray-900 mb-4">Shipping Address</h4>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-sm">{selectedOrder.shippingAddress.street}</p>
-                <p className="text-sm">{selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.state}</p>
-                <p className="text-sm">Pincode: {selectedOrder.shippingAddress.pincode}</p>
+              <h4 className="font-luxury font-semibold text-luxury-brown mb-4">Shipping Address</h4>
+              <div className="bg-gold-50 rounded-xl p-4 border border-gold-100">
+                <p className="text-sm font-luxury text-luxury-brown">{selectedOrder.shippingAddress.street}</p>
+                <p className="text-sm font-luxury text-luxury-brown">{selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.state}</p>
+                <p className="text-sm font-luxury text-luxury-brown">Pincode: {selectedOrder.shippingAddress.pincode}</p>
               </div>
             </div>
           </div>

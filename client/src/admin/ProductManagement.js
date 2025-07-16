@@ -21,12 +21,13 @@ const ProductManagement = () => {
   const [uploading, setUploading] = useState(false);
   const [selectedProductReviews, setSelectedProductReviews] = useState(null);
   const [reviewsLoading, setReviewsLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
 
-  const categories = ['Gold', 'Silver', 'Rings', 'Necklaces', 'Bracelets', 'Earrings', 'Pendants', 'Chains'];
   const metalTypes = ['24K', '22K', 'Silver'];
 
   useEffect(() => {
     fetchProducts();
+    fetchCategories();
   }, []);
 
   const fetchProducts = async () => {
@@ -37,6 +38,15 @@ const ProductManagement = () => {
     } catch (error) {
       console.error('Error fetching products:', error);
       setLoading(false);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const res = await axios.get('/api/categories/with-counts');
+      setCategories(res.data.categories.filter(cat => cat.isActive));
+    } catch (error) {
+      setCategories([]);
     }
   };
 
@@ -212,10 +222,15 @@ const ProductManagement = () => {
                   onChange={handleInputChange}
                   required
                   className="w-full border border-gold-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-gold-500 focus:border-transparent"
+                  disabled={categories.length === 0}
                 >
-                  {categories.map(cat => (
-                    <option key={cat} value={cat}>{cat}</option>
-                  ))}
+                  {categories.length === 0 ? (
+                    <option value="">No categories available</option>
+                  ) : (
+                    categories.map(cat => (
+                      <option key={cat._id} value={cat.name}>{cat.name}</option>
+                    ))
+                  )}
                 </select>
               </div>
 

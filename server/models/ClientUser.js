@@ -47,8 +47,8 @@ const clientUserSchema = new mongoose.Schema({
     },
     pincode: {
       type: String,
-      required: [true, 'Pincode is required'],
-      match: [/^[0-9]{6}$/, 'Please enter a valid 6-digit pincode']
+      required: false,
+      match: [/^[0-9]{5}$/, 'Please enter a valid 5-digit pincode']
     }
   },
   isActive: {
@@ -62,6 +62,14 @@ const clientUserSchema = new mongoose.Schema({
   phoneVerified: {
     type: Boolean,
     default: false
+  },
+  resetPasswordOtp: {
+    type: String,
+    default: null
+  },
+  resetPasswordOtpExpires: {
+    type: Date,
+    default: null
   }
 }, {
   timestamps: true

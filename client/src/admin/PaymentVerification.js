@@ -149,7 +149,7 @@ const PaymentVerification = () => {
                     <div>
                       <p className="font-medium text-gray-900">Order #{order.orderNumber}</p>
                       <p className="text-sm text-gray-600">
-                        {order.user.firstName} {order.user.lastName}
+                        {(order.user ? `${order.user.firstName || ''} ${order.user.lastName || ''}`.trim() : 'Unknown')}
                       </p>
                       <p className="text-sm text-gray-600">₹{order.totalAmount}</p>
                       <p className="text-xs text-gray-500">{order.paymentMethod}</p>
@@ -178,9 +178,9 @@ const PaymentVerification = () => {
                 <h4 className="font-medium text-gray-900 mb-2">Order Details</h4>
                 <div className="space-y-1 text-sm">
                   <p><span className="font-medium">Order #:</span> {selectedOrder.orderNumber}</p>
-                  <p><span className="font-medium">Customer:</span> {selectedOrder.user.firstName} {selectedOrder.user.lastName}</p>
-                  <p><span className="font-medium">Email:</span> {selectedOrder.user.email}</p>
-                  <p><span className="font-medium">Phone:</span> {selectedOrder.user.phone}</p>
+                  <p><span className="font-medium">Customer:</span> {(selectedOrder.user ? `${selectedOrder.user.firstName || ''} ${selectedOrder.user.lastName || ''}`.trim() : 'Unknown')}</p>
+                  <p><span className="font-medium">Email:</span> {selectedOrder.user?.email || '-'}</p>
+                  <p><span className="font-medium">Phone:</span> {selectedOrder.user?.phone || '-'}</p>
                   <p><span className="font-medium">Amount:</span> ₹{selectedOrder.totalAmount}</p>
                   <p><span className="font-medium">Payment Method:</span> {selectedOrder.paymentMethod}</p>
                 </div>

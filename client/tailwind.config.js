@@ -1,22 +1,22 @@
 module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
-    "./public/index.html"
+    "./public/index.html",
   ],
   theme: {
     extend: {
       colors: {
         gold: {
-          50: '#FFFBEB',
-          100: '#FEF3C7',
-          200: '#FDE68A',
-          300: '#FCD34D',
-          400: '#FBBF24',
-          500: '#F59E0B',
-          600: '#D97706',
-          700: '#B45309',
-          800: '#92400E',
-          900: '#78350F',
+          50: '#fffbea',
+          100: '#fdf6e3',
+          200: '#f6e7b8',
+          300: '#f0d98c',
+          400: '#e9c95e',
+          500: '#d4af37', // main gold
+          600: '#b8962e',
+          700: '#9c7c25',
+          800: '#80631c',
+          900: '#665014',
         },
         ruby: {
           50: '#FDF2F8',
@@ -43,17 +43,28 @@ module.exports = {
           900: '#1E3A8A',
         },
         luxury: {
-          cream: '#FDF8F3',
-          champagne: '#F7E7CE',
-          bronze: '#CD7F32',
-          platinum: '#E5E4E2',
-          diamond: '#B9F2FF',
-        }
+          cream: '#f8f5f0',
+          black: '#181818',
+          white: '#fff',
+          bright: '#faf9f6', // Tanishq-like bright white
+          brown: '#300708', // Deep luxury brown for text
+        },
+        tanishq: {
+          red: '#b11c22', // Tanishq luxury red
+          redLight: '#fbeaec', // subtle red hover bg
+        },
       },
       fontFamily: {
-        elegant: ['Playfair Display', 'serif'],
-        premium: ['Montserrat', 'sans-serif'],
-        luxury: ['Cormorant Garamond', 'serif'],
+        luxury: [
+          'Playfair Display',
+          'serif',
+        ],
+        sans: [
+          'Inter',
+          'ui-sans-serif',
+          'system-ui',
+          'sans-serif',
+        ],
       },
       backgroundImage: {
         'luxury-gradient': 'linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%)',

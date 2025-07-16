@@ -16,6 +16,7 @@ const adminOrderRoutes = require('./routes/adminOrders');
 const categoryRoutes = require('./routes/categories');
 const inquiriesRoute = require('./routes/inquiries');
 const paymentMethodsRoute = require('./routes/paymentMethods');
+const bannersRouter = require('./routes/banners');
 
 const app = express();
 
@@ -23,11 +24,13 @@ const app = express();
 app.set('trust proxy', 1);
 
 // Security middleware
-app.use(helmet());
+if (process.env.NODE_ENV === 'production') {
+  app.use(helmet());
+}
 
 const allowedOrigins = process.env.NODE_ENV === 'production'
   ? ['https://subhalaxmijewellery.com.np', 'https://www.subhalaxmijewellery.com.np']
-  : 'http://localhost:3000';
+  : ['http://localhost:3000'];
 
 app.use(cors({
   origin: allowedOrigins,
@@ -50,11 +53,30 @@ app.use('/api/auth', authLimiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Static files
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Static files with CORS for /uploads
+app.use('/uploads', cors({ origin: allowedOrigins }), express.static(path.join(__dirname, 'uploads')));
+
+// Remove all Content-Security-Policy headers in development
+if (process.env.NODE_ENV !== 'production') {
+  app.use((req, res, next) => {
+    res.removeHeader('Content-Security-Policy');
+    next();
+  });
+}
+
+// Place this just before your routes to override any previous CSP header in development
+if (process.env.NODE_ENV !== 'production') {
+  app.use((req, res, next) => {
+    res.setHeader(
+      'Content-Security-Policy',
+      "default-src * 'self' data: blob:; img-src * data: blob:; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval';"
+    );
+    next();
+  });
+}
 
 // Database connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://geniusappsolu:sslj@cluster0.dqkklnk.mongodb.net/sslj?retryWrites=true&w=majority&appName=Cluster0', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/subha-laxmi-jewellery', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -72,6 +94,7 @@ app.use('/api/admin/orders', adminOrderRoutes);
 app.use('/api', categoryRoutes);
 app.use('/api/inquiries', inquiriesRoute);
 app.use('/api/payment-methods', paymentMethodsRoute);
+app.use('/api/banners', bannersRouter);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

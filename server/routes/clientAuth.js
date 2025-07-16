@@ -7,6 +7,9 @@ const { auth, requireRole } = require('../middleware/auth');
 // Public routes
 router.post('/register', clientAuthController.register);
 router.post('/login', clientAuthController.login);
+router.get('/verify-email', clientAuthController.verifyEmail);
+router.post('/forgot-password', clientAuthController.forgotPassword);
+router.post('/reset-password', clientAuthController.resetPassword);
 
 // Protected routes
 router.get('/profile', clientAuth, clientAuthController.getProfile);

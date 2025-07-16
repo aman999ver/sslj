@@ -1,245 +1,110 @@
 import React from 'react';
+import { Helmet } from 'react-helmet';
 
 const AboutPage = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-luxury-cream to-gold-50 px-2 sm:px-4 md:px-8">
-      {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-gold-600 to-gold-800 text-white py-12 sm:py-20">
-        <div className="max-w-6xl mx-auto px-2 sm:px-4">
-          <div className="text-center">
-            <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold mb-4 sm:mb-6">
-              About Subha Laxmi Jewellery
-            </h1>
-            <p className="text-base sm:text-xl md:text-2xl text-gold-100 max-w-3xl mx-auto">
-              Crafting timeless elegance and preserving precious moments since our establishment
-            </p>
+    <>
+      <Helmet>
+        <title>About Subha Laxmi Jewellery | Nepal's Trusted Jeweller</title>
+        <meta name="description" content="Learn about Subha Laxmi Jewellery, Biratnagar's trusted gold and diamond jeweller. Discover our story, values, and commitment to quality." />
+      </Helmet>
+      <div className="bg-white px-2 sm:px-4 md:px-8 min-h-screen luxury-bg-pattern mt-10 md:mt-19 overflow-x-hidden">
+        {/* Hero Banner - About */}
+        <section className="relative border-b border-luxury-brown pb-8 mb-8 fade-in-section">
+          <div className="relative w-full flex items-center justify-center min-h-[320px] sm:min-h-[420px] md:min-h-[540px] py-8 sm:py-16 md:py-20">
+            <img
+              src="/logo.png"
+              alt="Subha Laxmi Jewellery Logo"
+              className="absolute top-0 left-0 w-full h-full object-cover opacity-10 z-0"
+              style={{ pointerEvents: 'none', minHeight: '320px', maxHeight: '700px' }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/60 to-luxury-brown/60 z-10"></div>
+            <div className="relative z-20 max-w-3xl mx-auto px-2 sm:px-4 text-center flex flex-col items-center justify-center h-full">
+              <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-luxury font-bold text-luxury-brown drop-shadow-lg mb-4 sm:mb-6 leading-tight">About Subha Laxmi Jewellery</h1>
+              <p className="text-base sm:text-xl md:text-2xl text-luxury-brown font-luxury mb-4 sm:mb-8 font-light">Nepal's Premier Luxury Jewellery Destination</p>
+              <p className="text-sm sm:text-lg md:text-xl text-luxury-brown mb-6 sm:mb-10 max-w-2xl mx-auto font-luxury">Crafting timeless elegance and preserving precious moments since our establishment</p>
+            </div>
+            <div className="pointer-events-none absolute inset-0 z-40 shimmer-gold"></div>
           </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-6xl mx-auto px-4 py-16">
-        {/* Our Story */}
-        <div className="mb-16">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        </section>
+        {/* Divider */}
+        <div className="w-full h-1 bg-gradient-to-r from-gold-300 via-gold-500 to-gold-300 rounded-full mb-12 opacity-60"></div>
+        {/* Our Story Section */}
+        <section className="max-w-6xl mx-auto px-4 py-16 fade-in-section">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-bold text-gray-800 mb-6">Our Story</h2>
-              <div className="space-y-4 text-gray-600 text-lg leading-relaxed">
+              <h2 className="text-3xl font-luxury font-bold text-luxury-brown mb-6">Our Story</h2>
+              <div className="space-y-4 text-luxury-brown/80 text-lg leading-relaxed font-luxury">
                 <p>
-                  Subha Laxmi Jewellery was founded with a vision to bring the finest quality jewellery 
-                  to the people of Biratnagar and beyond. Our journey began with a simple yet powerful 
-                  mission: to create pieces that not only adorn but also tell stories of love, tradition, 
-                  and celebration.
+                  Subha Laxmi Jewellery was founded with a vision to bring the finest quality jewellery to the people of Biratnagar and beyond. Our journey began with a simple yet powerful mission: to create pieces that not only adorn but also tell stories of love, tradition, and celebration.
                 </p>
                 <p>
-                  Located in the heart of Biratnagar, Ramjanki Path, we have been serving our valued 
-                  customers with dedication and commitment. Our store has become a trusted destination 
-                  for those seeking authentic, high-quality jewellery that combines traditional craftsmanship 
-                  with contemporary designs.
+                  Located in the heart of Biratnagar, Ramjanki Path, we have been serving our valued customers with dedication and commitment. Our store has become a trusted destination for those seeking authentic, high-quality jewellery that combines traditional craftsmanship with contemporary designs.
                 </p>
                 <p>
-                  Over the years, we have built a reputation for excellence, integrity, and customer 
-                  satisfaction. Every piece in our collection is carefully selected and crafted to meet 
-                  the highest standards of quality and beauty.
+                  Over the years, we have built a reputation for excellence, integrity, and customer satisfaction. Every piece in our collection is carefully selected and crafted to meet the highest standards of quality and beauty.
                 </p>
               </div>
             </div>
-            <div className="bg-white rounded-lg shadow-lg p-8">
-              <div className="text-center">
-                <div className="w-32 h-32 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <span className="text-4xl">💎</span>
-                </div>
-                <h3 className="text-2xl font-bold text-gray-800 mb-4">Our Commitment</h3>
-                <p className="text-gray-600">
-                  We are committed to providing our customers with the finest quality jewellery, 
-                  exceptional service, and a shopping experience that exceeds expectations.
-                </p>
-              </div>
+            <div className="bg-white rounded-2xl shadow-gold p-0 border-2 border-gold-200 luxury-bg-pattern flex flex-col items-center justify-center relative overflow-hidden min-h-[340px]">
+              <img src="/shop.jpg" alt="Subha Laxmi Jewellery Shop" className="absolute inset-0 w-full h-full object-cover rounded-2xl z-0" />
             </div>
           </div>
-        </div>
-
-        {/* Our Values */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-800 text-center mb-12">Our Values</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white rounded-lg shadow-lg p-8 text-center">
-              <div className="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        </section>
+        {/* Divider */}
+        <div className="w-full h-1 bg-gradient-to-r from-gold-300 via-gold-500 to-gold-300 rounded-full mb-12 opacity-60"></div>
+        {/* Luxury Features Section */}
+        <section className="py-20 bg-white fade-in-section mt-10 rounded-2xl shadow-gold max-w-6xl mx-auto">
+          <h2 className="text-3xl font-luxury text-center mb-12 text-luxury-brown">Why Choose Subha Laxmi</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-luxury-gradient rounded-full flex items-center justify-center mx-auto mb-4 shadow-gold">
                 <span className="text-2xl">✨</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-3">Quality</h3>
-              <p className="text-gray-600">
-                We never compromise on quality. Every piece in our collection meets the highest 
-                standards of craftsmanship and purity.
-              </p>
+              <h3 className="text-xl font-luxury font-semibold mb-2 text-luxury-brown">Premium Quality</h3>
+              <p className="text-luxury-brown font-luxury">Handcrafted with the finest materials and attention to detail</p>
             </div>
-            <div className="bg-white rounded-lg shadow-lg p-8 text-center">
-              <div className="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">🤝</span>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-luxury-gradient rounded-full flex items-center justify-center mx-auto mb-4 shadow-gold">
+                <span className="text-2xl">🏛️</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-3">Trust</h3>
-              <p className="text-gray-600">
-                Building lasting relationships with our customers through transparency, 
-                honesty, and reliable service.
-              </p>
+              <h3 className="text-xl font-luxury font-semibold mb-2 text-luxury-brown">Heritage Craftsmanship</h3>
+              <p className="text-luxury-brown font-luxury">Generations of traditional Nepali jewelry making expertise</p>
             </div>
-            <div className="bg-white rounded-lg shadow-lg p-8 text-center">
-              <div className="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">🎨</span>
-              </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-3">Innovation</h3>
-              <p className="text-gray-600">
-                Combining traditional designs with modern aesthetics to create unique 
-                pieces that stand the test of time.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Store Information */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-800 text-center mb-12">Visit Our Store</h2>
-          <div className="bg-white rounded-lg shadow-lg p-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-2xl font-bold text-gray-800 mb-6">Location & Contact</h3>
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-gold-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-gold-600">📍</span>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-800">Address</h4>
-                      <p className="text-gray-600">Ramjanki Path, Biratnagar, Nepal</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-gold-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-gold-600">📞</span>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-800">Phone Numbers</h4>
-                      <p className="text-gray-600">+977 9842031752</p>
-                      <p className="text-gray-600">+977 9815325777</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-gold-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-gold-600">🕒</span>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-800">Business Hours</h4>
-                      <p className="text-gray-600">Monday - Saturday: 10:00 AM - 8:00 PM</p>
-                      <p className="text-gray-600">Sunday: 11:00 AM - 6:00 PM</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <h3 className="text-2xl font-bold text-gray-800 mb-6">Why Choose Us</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-6 h-6 bg-gold-100 rounded-full flex items-center justify-center">
-                      <span className="text-gold-600 text-sm">✓</span>
-                    </div>
-                    <span className="text-gray-600">Authentic and certified jewellery</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-6 h-6 bg-gold-100 rounded-full flex items-center justify-center">
-                      <span className="text-gold-600 text-sm">✓</span>
-                    </div>
-                    <span className="text-gray-600">Wide range of designs and collections</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-6 h-6 bg-gold-100 rounded-full flex items-center justify-center">
-                      <span className="text-gold-600 text-sm">✓</span>
-                    </div>
-                    <span className="text-gray-600">Expert guidance and personalized service</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-6 h-6 bg-gold-100 rounded-full flex items-center justify-center">
-                      <span className="text-gold-600 text-sm">✓</span>
-                    </div>
-                    <span className="text-gray-600">Competitive pricing and value for money</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <div className="w-6 h-6 bg-gold-100 rounded-full flex items-center justify-center">
-                      <span className="text-gold-600 text-sm">✓</span>
-                    </div>
-                    <span className="text-gray-600">After-sales support and maintenance</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Our Collections */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-800 text-center mb-12">Our Collections</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white rounded-lg shadow-lg p-6 text-center">
-              <div className="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">💍</span>
-              </div>
-              <h3 className="text-lg font-bold text-gray-800 mb-2">Wedding Collection</h3>
-              <p className="text-gray-600 text-sm">
-                Exquisite bridal jewellery sets for your special day
-              </p>
-            </div>
-            <div className="bg-white rounded-lg shadow-lg p-6 text-center">
-              <div className="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">👑</span>
-              </div>
-              <h3 className="text-lg font-bold text-gray-800 mb-2">Traditional Sets</h3>
-              <p className="text-gray-600 text-sm">
-                Classic designs that celebrate our cultural heritage
-              </p>
-            </div>
-            <div className="bg-white rounded-lg shadow-lg p-6 text-center">
-              <div className="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">✨</span>
-              </div>
-              <h3 className="text-lg font-bold text-gray-800 mb-2">Modern Designs</h3>
-              <p className="text-gray-600 text-sm">
-                Contemporary pieces for the modern woman
-              </p>
-            </div>
-            <div className="bg-white rounded-lg shadow-lg p-6 text-center">
-              <div className="w-16 h-16 bg-gold-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-luxury-gradient rounded-full flex items-center justify-center mx-auto mb-4 shadow-gold">
                 <span className="text-2xl">💎</span>
               </div>
-              <h3 className="text-lg font-bold text-gray-800 mb-2">Diamond Collection</h3>
-              <p className="text-gray-600 text-sm">
-                Premium diamond jewellery for special occasions
-              </p>
+              <h3 className="text-xl font-luxury font-semibold mb-2 text-luxury-brown">Live Pricing</h3>
+              <p className="text-luxury-brown font-luxury">Transparent pricing based on current market rates</p>
             </div>
           </div>
-        </div>
-
+        </section>
+        {/* Divider */}
+        <div className="w-full h-1 bg-gradient-to-r from-gold-300 via-gold-500 to-gold-300 rounded-full mb-12 opacity-60"></div>
         {/* Call to Action */}
-        <div className="bg-gradient-to-r from-gold-600 to-gold-800 rounded-lg p-8 text-center text-white">
-          <h2 className="text-3xl font-bold mb-4">Ready to Find Your Perfect Piece?</h2>
-          <p className="text-xl mb-6 text-gold-100">
+        <div className="bg-gradient-to-r from-gold-500 to-gold-700 rounded-2xl p-8 text-center text-white shadow-gold max-w-4xl mx-auto mb-16">
+          <h2 className="text-3xl font-luxury font-bold mb-4">Ready to Find Your Perfect Piece?</h2>
+          <p className="text-xl mb-6 text-gold-100 font-luxury">
             Visit our store or browse our online collection to discover the jewellery of your dreams.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="/products"
-              className="bg-white text-gold-600 px-8 py-3 rounded-lg font-semibold hover:bg-gold-50 transition-colors"
+              className="bg-white text-gold-600 px-8 py-3 rounded-lg font-luxury font-semibold hover:bg-gold-50 transition-colors shadow-gold"
             >
               Browse Collection
             </a>
             <a
               href="/contact"
-              className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-gold-600 transition-colors"
+              className="border-2 border-white text-white px-8 py-3 rounded-lg font-luxury font-semibold hover:bg-white hover:text-gold-600 transition-colors shadow-gold"
             >
               Contact Us
             </a>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

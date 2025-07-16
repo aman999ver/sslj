@@ -15,7 +15,6 @@ const productSchema = new mongoose.Schema({
   category: {
     type: String,
     required: [true, 'Product category is required'],
-    enum: ['Gold', 'Silver', 'Rings', 'Necklaces', 'Bracelets', 'Earrings', 'Pendants', 'Chains'],
     default: 'Gold'
   },
   metalType: {
@@ -97,6 +96,31 @@ productSchema.pre('save', function(next) {
     const timestamp = Date.now().toString().slice(-6);
     const random = Math.random().toString(36).substring(2, 5).toUpperCase();
     this.sku = `SLJ-${this.metalType}-${timestamp}-${random}`;
+  }
+  next();
+});
+
+// Pre-save hook to calculate price
+productSchema.pre('save', async function(next) {
+  if (this.isModified('weight') || this.isModified('lossPercentage') || this.isModified('makingCharge') || this.isModified('metalType')) {
+    try {
+      const MetalRate = mongoose.model('MetalRate');
+      const rates = await MetalRate.find({});
+      
+      const metalRatesMap = rates.reduce((map, rate) => {
+        // Map metal types like '24K Gold' to just '24K' for lookup
+        const key = rate.metalType.startsWith('24K') ? '24K' 
+                  : rate.metalType.startsWith('22K') ? '22K'
+                  : 'Silver';
+        map[key] = rate.ratePerTola;
+        return map;
+      }, {});
+      
+      this.price = this.calculatePrice(metalRatesMap);
+    } catch (error) {
+      console.error('Error calculating product price:', error);
+      // Decide if you want to block saving or not. Here, we'll let it save with a potentially stale price.
+    }
   }
   next();
 });

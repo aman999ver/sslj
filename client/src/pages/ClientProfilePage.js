@@ -72,53 +72,55 @@ const ClientProfilePage = () => {
     }
   };
 
-  if (loading) return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
-  if (!form) return <div className="flex justify-center items-center min-h-screen text-red-600">{error || 'Profile not found'}</div>;
+  if (loading) return <div className="flex justify-center items-center min-h-screen bg-white luxury-bg-pattern font-luxury text-luxury-brown">Loading...</div>;
+  if (!form) return <div className="flex justify-center items-center min-h-screen bg-white luxury-bg-pattern font-luxury text-red-600">{error || 'Profile not found'}</div>;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">My Profile</h2>
-        {error && <div className="mb-4 text-red-600 text-center">{error}</div>}
-        {success && <div className="mb-4 text-green-600 text-center">{success}</div>}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="flex space-x-2">
-            <div className="w-1/2">
-              <label className="block mb-1 font-medium">First Name</label>
-              <input type="text" name="firstName" className="w-full border border-gray-300 rounded px-3 py-2" value={form.firstName} onChange={handleChange} required />
+    <div className="flex flex-col items-center justify-center min-h-screen bg-neutral-50 px-2 sm:px-4 py-4 fade-in-section">
+      <div className="bg-white rounded-2xl shadow-gold border-4 border-gold-400 p-4 sm:p-8 w-full max-w-2xl shimmer-gold">
+        <div className="flex flex-col items-center mb-3">
+          <img src="/logo.png" alt="Subha Laxmi Logo" className="w-16 h-16 mb-1" />
+          <h2 className="text-2xl font-luxury font-bold text-luxury-brown mb-1 text-center">My Profile</h2>
+          <div className="w-24 h-1 bg-gradient-to-r from-gold-300 via-gold-500 to-gold-300 rounded-full mb-1 opacity-70"></div>
+        </div>
+        {error && <div className="mb-4 text-red-600 text-center font-luxury">{error}</div>}
+        {success && <div className="mb-4 text-green-600 text-center font-luxury">{success}</div>}
+        <form onSubmit={handleSubmit} className="space-y-3">
+          <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+            <div className="w-full md:w-1/2">
+              <label className="block mb-1 font-luxury font-semibold text-luxury-brown">First Name</label>
+              <input type="text" name="firstName" className="w-full px-4 py-3 border border-gold-200 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent font-luxury text-luxury-brown bg-white/80 placeholder-luxury-brown" value={form.firstName} onChange={handleChange} required placeholder="First name" />
             </div>
-            <div className="w-1/2">
-              <label className="block mb-1 font-medium">Last Name</label>
-              <input type="text" name="lastName" className="w-full border border-gray-300 rounded px-3 py-2" value={form.lastName} onChange={handleChange} required />
-            </div>
-          </div>
-          <div>
-            <label className="block mb-1 font-medium">Email</label>
-            <input type="email" name="email" className="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100" value={form.email} disabled />
-          </div>
-          <div>
-            <label className="block mb-1 font-medium">Phone</label>
-            <input type="text" name="phone" className="w-full border border-gray-300 rounded px-3 py-2" value={form.phone} onChange={handleChange} required />
-          </div>
-          <div>
-            <label className="block mb-1 font-medium">Street</label>
-            <input type="text" name="street" className="w-full border border-gray-300 rounded px-3 py-2" value={form.address?.street || ''} onChange={handleChange} required />
-          </div>
-          <div className="flex space-x-2">
-            <div className="w-1/2">
-              <label className="block mb-1 font-medium">City</label>
-              <input type="text" name="city" className="w-full border border-gray-300 rounded px-3 py-2" value={form.address?.city || ''} onChange={handleChange} required />
-            </div>
-            <div className="w-1/2">
-              <label className="block mb-1 font-medium">State</label>
-              <input type="text" name="state" className="w-full border border-gray-300 rounded px-3 py-2" value={form.address?.state || ''} onChange={handleChange} required />
+            <div className="w-full md:w-1/2">
+              <label className="block mb-1 font-luxury font-semibold text-luxury-brown">Last Name</label>
+              <input type="text" name="lastName" className="w-full px-4 py-3 border border-gold-200 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent font-luxury text-luxury-brown bg-white/80 placeholder-luxury-brown" value={form.lastName} onChange={handleChange} required placeholder="Last name" />
             </div>
           </div>
           <div>
-            <label className="block mb-1 font-medium">Pincode</label>
-            <input type="text" name="pincode" className="w-full border border-gray-300 rounded px-3 py-2" value={form.address?.pincode || ''} onChange={handleChange} required />
+            <label className="block mb-1 font-luxury font-semibold text-luxury-brown">Phone</label>
+            <input type="text" name="phone" className="w-full px-4 py-3 border border-gold-200 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent font-luxury text-luxury-brown bg-white/80 placeholder-luxury-brown" value={form.phone} onChange={handleChange} required placeholder="Phone number" />
           </div>
-          <button type="submit" className="w-full bg-gold-600 text-white py-2 rounded font-semibold hover:bg-gold-700 transition">
+          <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+            <div className="w-full md:w-1/2">
+              <label className="block mb-1 font-luxury font-semibold text-luxury-brown">Street</label>
+              <input type="text" name="street" className="w-full px-4 py-3 border border-gold-200 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent font-luxury text-luxury-brown bg-white/80 placeholder-luxury-brown" value={form.address?.street || ''} onChange={handleChange} required placeholder="Street address" />
+            </div>
+            <div className="w-full md:w-1/2">
+              <label className="block mb-1 font-luxury font-semibold text-luxury-brown">City</label>
+              <input type="text" name="city" className="w-full px-4 py-3 border border-gold-200 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent font-luxury text-luxury-brown bg-white/80 placeholder-luxury-brown" value={form.address?.city || ''} onChange={handleChange} required placeholder="City" />
+            </div>
+          </div>
+          <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+            <div className="w-full md:w-1/2">
+              <label className="block mb-1 font-luxury font-semibold text-luxury-brown">State</label>
+              <input type="text" name="state" className="w-full px-4 py-3 border border-gold-200 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent font-luxury text-luxury-brown bg-white/80 placeholder-luxury-brown" value={form.address?.state || ''} onChange={handleChange} required placeholder="State" />
+            </div>
+            <div className="w-full md:w-1/2">
+              <label className="block mb-1 font-luxury font-semibold text-luxury-brown">Pincode</label>
+              <input type="text" name="pincode" className="w-full px-4 py-3 border border-gold-200 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent font-luxury text-luxury-brown bg-white/80 placeholder-luxury-brown" value={form.address?.pincode || ''} onChange={handleChange} required placeholder="Pincode" />
+            </div>
+          </div>
+          <button type="submit" className="w-full bg-luxury-brown text-white py-3 rounded-xl font-luxury font-semibold shadow hover:bg-luxury-brown/90 transition text-lg mt-2">
             Update Profile
           </button>
         </form>

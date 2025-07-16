@@ -12,10 +12,12 @@ import Footer from './components/Footer';
 import ClientLoginPage from './pages/ClientLoginPage';
 import ClientRegisterPage from './pages/ClientRegisterPage';
 import ClientProfilePage from './pages/ClientProfilePage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import { CartProvider } from './context/CartContext';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import OrdersPage from './pages/OrdersPage';
+import RatesPage from './pages/RatesPage';
 
 // ScrollToTop component
 function ScrollToTop() {
@@ -29,10 +31,29 @@ function ScrollToTop() {
 function AppContent() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
+  const isAuthPage =
+    location.pathname === '/login' ||
+    location.pathname === '/register' ||
+    location.pathname === '/forgot-password' ||
+    location.pathname === '/admin/login';
+
+  // Health check useEffect
+  React.useEffect(() => {
+    fetch('/api/health')
+      .then(res => res.json())
+      .then(data => {
+        console.log('API Health:', data);
+      })
+      .catch(err => {
+        console.error('API Health check failed:', err);
+        alert('Warning: Backend API is not reachable!');
+      });
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-luxury-cream">
-      {!isAdminRoute && <Navbar />}
-      <div className={`flex-1 ${!isAdminRoute ? 'pt-20' : ''}`}>
+      {!isAdminRoute && !isAuthPage && <Navbar />}
+      <div className={`flex-1 ${!isAdminRoute && !isAuthPage ? 'pt-20' : ''}`}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/products" element={<ProductsPage />} />
@@ -47,9 +68,11 @@ function AppContent() {
           <Route path="/profile" element={<ClientProfilePage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/rates" element={<RatesPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         </Routes>
       </div>
-      {!isAdminRoute && <Footer />}
+      {!isAdminRoute && !isAuthPage && <Footer />}
     </div>
   );
 }

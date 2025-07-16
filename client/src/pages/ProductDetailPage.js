@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useCart } from '../context/CartContext';
 
 const ProductDetailPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -73,6 +74,12 @@ const ProductDetailPage = () => {
     e.preventDefault();
     setReviewLoading(true);
     setReviewError('');
+    if (!localStorage.getItem('clientToken')) {
+      window.alert('You need to login to submit a review. Redirecting to login page.');
+      navigate('/login');
+      setReviewLoading(false);
+      return;
+    }
     try {
       await axios.post(`/api/products/${product._id}/reviews`, reviewForm, {
         headers: { Authorization: `Bearer ${localStorage.getItem('clientToken')}` }
@@ -80,13 +87,18 @@ const ProductDetailPage = () => {
       setReviewForm({ rating: 5, comment: '' });
       fetchReviews();
     } catch (err) {
-      setReviewError('Failed to submit review. You may need to log in.');
+      setReviewError('Failed to submit review.');
     } finally {
       setReviewLoading(false);
     }
   };
 
   const handleAddToCart = async () => {
+    if (!localStorage.getItem('clientToken')) {
+      window.alert('You need to login to add items to your cart. Redirecting to login page.');
+      navigate('/login');
+      return;
+    }
     const success = await addToCart(product._id, quantity);
     if (success) {
       alert('Product added to cart successfully!');
@@ -147,148 +159,83 @@ const ProductDetailPage = () => {
   }
 
   return (
-    <div className="px-2 sm:px-4 md:px-8 py-4">
-      <div className="flex flex-col md:flex-row gap-6">
-        <div className="w-full md:w-1/2">
-          {/* Product image and gallery */}
-          <div className="space-y-6">
-            {/* Main Image */}
-            <div className="relative bg-white rounded-2xl shadow-luxury overflow-hidden">
+    <div className="bg-white px-1 sm:px-2 md:px-4 py-8 min-h-screen luxury-bg-pattern mt-12">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-start">
+          {/* Product Image Section */}
+          <div className="w-full md:w-1/3 flex flex-col items-center">
+            <div className="bg-white rounded-2xl shadow-lg border-2 border-luxury-brown overflow-hidden w-full">
               <img
                 src={product.images[selectedImage]}
                 alt={product.name}
-                className="w-full h-96 md:h-[500px] object-cover"
+                className="w-full h-72 md:h-80 object-cover rounded-2xl"
+                style={{ minHeight: 180, minWidth: 180 }}
               />
-              {product.featured && (
-                <div className="absolute top-4 left-4 bg-luxury-gradient text-white px-3 py-1 rounded-full text-xs font-premium font-semibold">
-                  Featured
-                </div>
-              )}
-              <div className="absolute top-4 right-4 bg-white/90 text-gold-600 px-2 py-1 rounded-full text-xs font-premium font-semibold">
-                {product.metalType}
+              {/* Badges */}
+              <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
+                {product.featured && (
+                  <span className="bg-tanishq-redLight text-tanishq-red px-3 py-1 rounded-full text-xs font-luxury font-semibold border border-tanishq-red shadow">Featured</span>
+                )}
+                <span className={`px-3 py-1 rounded-full text-xs font-luxury font-semibold border ${product.metalType === '24K' ? 'bg-yellow-100 text-yellow-800 border-yellow-300' : product.metalType === '22K' ? 'bg-yellow-50 text-yellow-700 border-yellow-200' : product.metalType === 'Silver' ? 'bg-gray-100 text-gray-700 border-gray-300' : 'bg-gold-50 text-gold-700 border-gold-200'}`}>{product.metalType}</span>
               </div>
             </div>
-
-            {/* Thumbnail Images */}
-            <div className="flex space-x-4 overflow-x-auto pb-2">
+            {/* Thumbnails */}
+            <div className="flex gap-2 mt-3 flex-wrap justify-center">
               {product.images.map((img, idx) => (
                 <button
                   key={idx}
                   onClick={() => setSelectedImage(idx)}
-                  className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
-                    selectedImage === idx 
-                      ? 'border-gold-500 shadow-lg' 
-                      : 'border-gray-200 hover:border-gold-300'
-                  }`}
+                  className={`w-12 h-12 rounded-lg overflow-hidden border-2 transition-all duration-200 ${selectedImage === idx ? 'border-gold-500 shadow-lg' : 'border-gray-200 hover:border-gold-300'}`}
                 >
-                  <img
-                    src={img}
-                    alt={`${product.name} - ${idx + 1}`}
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={img} alt={`${product.name} - ${idx + 1}`} className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>
           </div>
-        </div>
-        <div className="w-full md:w-1/2">
-          {/* Product info, price, etc. */}
-          <div className="space-y-8">
-            {/* Basic Info */}
+
+          {/* Product Info Section */}
+          <div className="flex-1 space-y-6">
             <div>
-              <h1 className="text-4xl font-elegant font-bold text-gold-800 mb-2">{product.name}</h1>
-              <div className="flex items-center space-x-4 mb-4">
-                <span className="bg-royal-100 text-royal-700 px-3 py-1 rounded-full text-sm font-premium">
-                  {product.category}
-                </span>
-                <span className="bg-gold-100 text-gold-700 px-3 py-1 rounded-full text-sm font-premium">
-                  {product.metalType}
-                </span>
-                <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm font-premium">
-                  SKU: {product.sku}
-                </span>
+              <h1 className="text-3xl font-luxury font-bold text-luxury-brown mb-2">{product.name}</h1>
+              <div className="flex flex-wrap items-center gap-2 mb-2">
+                <span className="bg-royal-100 text-royal-700 px-3 py-1 rounded-full text-xs font-luxury border border-royal-200">{product.category}</span>
+                <span className="bg-gold-100 text-gold-700 px-3 py-1 rounded-full text-xs font-luxury border border-gold-200">{product.metalType}</span>
+                <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-luxury border border-gray-200">SKU: {product.sku}</span>
               </div>
-              <p className="text-gray-600 font-premium text-lg leading-relaxed">
-                {product.description}
-              </p>
+              <p className="text-luxury-brown font-luxury text-base leading-relaxed mb-2">{product.description}</p>
             </div>
-
-            {/* Price */}
-            <div className="bg-gradient-to-r from-gold-50 to-yellow-50 rounded-2xl p-6 border border-gold-200">
-              <div className="text-center">
-                <div className="text-4xl font-elegant font-bold text-gold-600 mb-2">
-                  NPR {product.price.toLocaleString()}
-                </div>
-                <p className="text-sm text-gray-600 font-premium">
-                  Price includes making charges and current metal rates
-                </p>
+            <div>
+              <h3 className="text-xl font-luxury font-semibold text-gold-800 mb-2">Specifications</h3>
+              <div className="grid grid-cols-2 gap-4 text-base">
+                <div className="flex justify-between"><span className="text-luxury-brown font-luxury">Weight:</span><span className="font-semibold text-luxury-brown">{product.weight}g</span></div>
+                <div className="flex justify-between"><span className="text-luxury-brown font-luxury">Making Charge:</span><span className="font-semibold text-luxury-brown">NPR {product.makingCharge}</span></div>
+                {product.lossPercentage > 0 && (<div className="flex justify-between"><span className="text-luxury-brown font-luxury">Loss Percentage:</span><span className="font-semibold text-ruby-600">{product.lossPercentage}%</span></div>)}
+                <div className="flex justify-between"><span className="text-luxury-brown font-luxury">Metal Type:</span><span className="font-semibold text-gold-600">{product.metalType}</span></div>
               </div>
             </div>
-
-            {/* Specifications */}
-            <div className="bg-white rounded-2xl shadow-luxury p-6">
-              <h3 className="text-xl font-premium font-semibold text-gold-800 mb-4">Specifications</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex justify-between">
-                  <span className="text-gray-600 font-premium">Weight:</span>
-                  <span className="font-semibold text-gray-800">{product.weight}g</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600 font-premium">Making Charge:</span>
-                  <span className="font-semibold text-gray-800">NPR {product.makingCharge}</span>
-                </div>
-                {product.lossPercentage > 0 && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 font-premium">Loss Percentage:</span>
-                    <span className="font-semibold text-ruby-600">{product.lossPercentage}%</span>
-                  </div>
-                )}
-                <div className="flex justify-between">
-                  <span className="text-gray-600 font-premium">Metal Type:</span>
-                  <span className="font-semibold text-gold-600">{product.metalType}</span>
-                </div>
-              </div>
+            {/* Price Section just above Add to Cart */}
+            <div className="bg-gradient-to-r from-gold-50 to-yellow-50 rounded-2xl p-6 border-2 border-gold-200 shadow-gold flex flex-col items-center">
+              <div className="text-3xl font-luxury font-bold text-gold-600 mb-1">NPR {product.price.toLocaleString()}</div>
+              <p className="text-sm text-luxury-brown font-luxury mb-2">Price includes making charges and current metal rates</p>
             </div>
-
-            {/* Add to Cart */}
-            <div className="bg-white rounded-2xl shadow-luxury p-6">
-              <div className="space-y-4">
-                <div className="flex items-center space-x-4">
-                  <label className="font-medium text-gray-700">Quantity:</label>
-                  <div className="flex items-center border border-gray-300 rounded-lg">
-                    <button
-                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="px-4 py-2 hover:bg-gray-100 transition-colors"
-                    >
-                      -
-                    </button>
-                    <span className="px-6 py-2 border-x border-gray-300 font-semibold">{quantity}</span>
-                    <button
-                      onClick={() => setQuantity(quantity + 1)}
-                      className="px-4 py-2 hover:bg-gray-100 transition-colors"
-                    >
-                      +
-                    </button>
-                  </div>
+            {/* Add to Cart Section at the bottom */}
+            <div className="bg-white rounded-2xl shadow border border-gold-100 flex flex-col items-center p-4 mt-2">
+              <div className="flex items-center space-x-3 mb-2">
+                <label className="font-medium text-luxury-brown">Quantity:</label>
+                <div className="flex items-center border border-gold-200 rounded-lg">
+                  <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="px-3 py-1 hover:bg-gold-50 transition-colors">-</button>
+                  <span className="px-4 py-1 border-x border-gold-200 font-semibold">{quantity}</span>
+                  <button onClick={() => setQuantity(quantity + 1)} className="px-3 py-1 hover:bg-gold-50 transition-colors">+</button>
                 </div>
-                <button 
-                  onClick={handleAddToCart}
-                  disabled={cartLoading}
-                  className="w-full bg-luxury-gradient text-white py-4 rounded-xl font-premium font-semibold text-lg shadow-premium hover:shadow-luxury transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {cartLoading ? 'Adding to Cart...' : 'Add to Cart'}
-                </button>
               </div>
+              <button onClick={handleAddToCart} disabled={cartLoading} className="w-full bg-luxury-brown text-white py-3 rounded-xl font-luxury font-semibold text-lg shadow hover:bg-luxury-brown/90 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed mt-2">{cartLoading ? 'Adding to Cart...' : 'Add to Cart'}</button>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Tabs Section */}
-      <div className="mt-16">
-        <div className="bg-white rounded-2xl shadow-luxury overflow-hidden">
-          {/* Tab Headers */}
-          <div className="flex border-b border-gray-200">
+        {/* Tabs Section */}
+        <div className="bg-white rounded-2xl shadow-lg border-2 border-luxury-brown mt-12 overflow-hidden">
+          <div className="flex border-b border-gold-200 text-lg">
             {[
               { id: 'details', label: 'Product Details', icon: '📋' },
               { id: 'specifications', label: 'Specifications', icon: '⚙️' }
@@ -296,139 +243,81 @@ const ProductDetailPage = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 px-6 py-4 text-center font-premium font-medium transition-colors ${
-                  activeTab === tab.id
-                    ? 'text-gold-600 border-b-2 border-gold-500 bg-gold-50'
-                    : 'text-gray-600 hover:text-gold-500 hover:bg-gray-50'
-                }`}
+                className={`flex-1 px-6 py-4 text-center font-luxury font-medium transition-colors ${activeTab === tab.id ? 'text-gold-600 border-b-2 border-gold-500 bg-gold-50' : 'text-luxury-brown hover:text-gold-500 hover:bg-gold-50'}`}
               >
                 <span className="mr-2">{tab.icon}</span>
                 {tab.label}
               </button>
             ))}
           </div>
-
-          {/* Tab Content */}
-          <div className="p-6">
+          <div className="p-10">
             {activeTab === 'details' && (
-              <div className="prose max-w-none">
-                <h3 className="text-xl font-premium font-semibold text-gold-800 mb-4">Product Details</h3>
-                <p className="text-gray-600 leading-relaxed">{product.description}</p>
+              <div className="prose max-w-none text-lg">
+                <h3 className="text-2xl font-luxury font-semibold text-gold-800 mb-4">Product Details</h3>
+                <p className="text-luxury-brown leading-relaxed text-lg">{product.description}</p>
                 <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="bg-gold-50 rounded-lg p-4">
-                    <h4 className="font-premium font-semibold text-gold-800 mb-2">Craftsmanship</h4>
-                    <p className="text-gray-600 text-sm">Handcrafted with traditional Nepali techniques and modern precision.</p>
+                    <h4 className="font-luxury font-semibold text-gold-800 mb-2">Craftsmanship</h4>
+                    <p className="text-luxury-brown text-sm">Handcrafted with traditional Nepali techniques and modern precision.</p>
                   </div>
                   <div className="bg-royal-50 rounded-lg p-4">
-                    <h4 className="font-premium font-semibold text-royal-800 mb-2">Quality Assurance</h4>
-                    <p className="text-gray-600 text-sm">Every piece is quality tested and certified for purity and craftsmanship.</p>
+                    <h4 className="font-luxury font-semibold text-royal-800 mb-2">Quality Assurance</h4>
+                    <p className="text-luxury-brown text-sm">Every piece is quality tested and certified for purity and craftsmanship.</p>
                   </div>
                 </div>
               </div>
             )}
-
             {activeTab === 'specifications' && (
               <div>
-                <h3 className="text-xl font-premium font-semibold text-gold-800 mb-4">Technical Specifications</h3>
+                <h3 className="text-xl font-luxury font-semibold text-gold-800 mb-4">Technical Specifications</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-3">
-                    <div className="flex justify-between py-2 border-b border-gray-100">
-                      <span className="font-premium text-gray-600">Product Name</span>
-                      <span className="font-semibold">{product.name}</span>
-                    </div>
-                    <div className="flex justify-between py-2 border-b border-gray-100">
-                      <span className="font-premium text-gray-600">Category</span>
-                      <span className="font-semibold">{product.category}</span>
-                    </div>
-                    <div className="flex justify-between py-2 border-b border-gray-100">
-                      <span className="font-premium text-gray-600">Metal Type</span>
-                      <span className="font-semibold text-gold-600">{product.metalType}</span>
-                    </div>
-                    <div className="flex justify-between py-2 border-b border-gray-100">
-                      <span className="font-premium text-gray-600">Weight</span>
-                      <span className="font-semibold">{product.weight} grams</span>
-                    </div>
+                    <div className="flex justify-between py-2 border-b border-gold-100"><span className="font-luxury text-luxury-brown">Product Name</span><span className="font-semibold">{product.name}</span></div>
+                    <div className="flex justify-between py-2 border-b border-gold-100"><span className="font-luxury text-luxury-brown">Category</span><span className="font-semibold">{product.category}</span></div>
+                    <div className="flex justify-between py-2 border-b border-gold-100"><span className="font-luxury text-luxury-brown">Metal Type</span><span className="font-semibold text-gold-600">{product.metalType}</span></div>
+                    <div className="flex justify-between py-2 border-b border-gold-100"><span className="font-luxury text-luxury-brown">Weight</span><span className="font-semibold">{product.weight} grams</span></div>
                   </div>
                   <div className="space-y-3">
-                    <div className="flex justify-between py-2 border-b border-gray-100">
-                      <span className="font-premium text-gray-600">Making Charge</span>
-                      <span className="font-semibold">NPR {product.makingCharge}</span>
-                    </div>
-                    {product.lossPercentage > 0 && (
-                      <div className="flex justify-between py-2 border-b border-gray-100">
-                        <span className="font-premium text-gray-600">Loss Percentage</span>
-                        <span className="font-semibold text-ruby-600">{product.lossPercentage}%</span>
-                      </div>
-                    )}
-                    <div className="flex justify-between py-2 border-b border-gray-100">
-                      <span className="font-premium text-gray-600">SKU</span>
-                      <span className="font-mono text-sm">{product.sku}</span>
-                    </div>
-                    <div className="flex justify-between py-2 border-b border-gray-100">
-                      <span className="font-premium text-gray-600">Total Price</span>
-                      <span className="font-semibold text-gold-600">NPR {product.price.toLocaleString()}</span>
-                    </div>
+                    <div className="flex justify-between py-2 border-b border-gold-100"><span className="font-luxury text-luxury-brown">Making Charge</span><span className="font-semibold">NPR {product.makingCharge}</span></div>
+                    {product.lossPercentage > 0 && (<div className="flex justify-between py-2 border-b border-gold-100"><span className="font-luxury text-luxury-brown">Loss Percentage</span><span className="font-semibold text-ruby-600">{product.lossPercentage}%</span></div>)}
+                    <div className="flex justify-between py-2 border-b border-gold-100"><span className="font-luxury text-luxury-brown">SKU</span><span className="font-mono text-sm">{product.sku}</span></div>
+                    <div className="flex justify-between py-2 border-b border-gold-100"><span className="font-luxury text-luxury-brown">Total Price</span><span className="font-semibold text-gold-600">NPR {product.price.toLocaleString()}</span></div>
                   </div>
                 </div>
               </div>
             )}
           </div>
         </div>
-      </div>
 
-      {/* Reviews Section */}
-      <div className="mt-16">
-        <div className="bg-white rounded-2xl shadow-luxury p-8">
-          <h3 className="text-2xl font-premium font-semibold text-gold-800 mb-6">Customer Reviews</h3>
-          {/* Review Form */}
+        {/* Reviews Section */}
+        <div className="bg-white rounded-2xl shadow-lg border-2 border-luxury-brown p-8 mt-12">
+          <h3 className="text-2xl font-luxury font-semibold text-gold-800 mb-6">Customer Reviews</h3>
           <form onSubmit={handleReviewSubmit} className="mb-8">
             <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
-              <label className="font-premium text-gray-700">Your Rating:</label>
-              <select
-                name="rating"
-                value={reviewForm.rating}
-                onChange={handleReviewChange}
-                className="border border-gold-200 rounded-lg px-3 py-2"
-              >
-                {[5,4,3,2,1].map(r => (
-                  <option key={r} value={r}>{r} Star{r > 1 && 's'}</option>
-                ))}
+              <label className="font-luxury text-luxury-brown">Your Rating:</label>
+              <select name="rating" value={reviewForm.rating} onChange={handleReviewChange} className="border border-gold-200 rounded-lg px-3 py-2">
+                {[5,4,3,2,1].map(r => (<option key={r} value={r}>{r} Star{r > 1 && 's'}</option>))}
               </select>
-              <input
-                type="text"
-                name="comment"
-                value={reviewForm.comment}
-                onChange={handleReviewChange}
-                placeholder="Write your review..."
-                className="flex-1 border border-gold-200 rounded-lg px-3 py-2"
-                required
-              />
+              <input type="text" name="comment" value={reviewForm.comment} onChange={handleReviewChange} placeholder="Write your review..." className="flex-1 border border-gold-200 rounded-lg px-3 py-2" required />
             </div>
-            <button 
-              type="submit"
-              disabled={reviewLoading}
-              className="w-full bg-gold-600 text-white py-4 rounded-xl font-premium font-semibold text-lg shadow-premium hover:shadow-luxury transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {reviewLoading ? 'Submitting...' : 'Submit Review'}
-            </button>
+            <button type="submit" disabled={reviewLoading} className="w-full bg-luxury-brown text-white py-4 rounded-xl font-luxury font-semibold text-lg shadow hover:bg-luxury-brown/90 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed">{reviewLoading ? 'Submitting...' : 'Submit Review'}</button>
           </form>
-          {/* Reviews List */}
           {reviews.length === 0 ? (
-            <div className="text-gray-500 font-premium">No reviews yet. Be the first to review this product!</div>
+            <div className="text-luxury-brown font-luxury">No reviews yet. Be the first to review this product!</div>
           ) : (
             <div className="space-y-6">
               {reviews.map((rev) => (
                 <div key={rev._id} className="border-b border-gold-100 pb-4">
                   <div className="flex items-center space-x-3 mb-2">
-                    <span className="font-premium font-semibold text-gold-700">{rev.user?.firstName || 'Customer'}</span>
+                    <span className="font-luxury font-semibold text-gold-700">{rev.user?.firstName || 'Customer'}</span>
                     {renderStars(rev.rating)}
                     <span className="text-xs text-gray-400">{new Date(rev.createdAt).toLocaleDateString()}</span>
                   </div>
-                  <div className="text-gray-700 font-premium mb-1">{rev.comment}</div>
+                  <div className="text-luxury-brown font-luxury mb-1">{rev.comment}</div>
                   {rev.adminReply && (
                     <div className="ml-4 mt-2 p-3 bg-gold-50 rounded-lg border-l-4 border-gold-400">
                       <span className="font-semibold text-gold-700">Admin Reply:</span>
-                      <span className="ml-2 text-gray-700">{rev.adminReply}</span>
+                      <span className="ml-2 text-luxury-brown">{rev.adminReply}</span>
                     </div>
                   )}
                 </div>
@@ -436,60 +325,40 @@ const ProductDetailPage = () => {
             </div>
           )}
         </div>
-      </div>
 
-      {/* Related Products */}
-      {relatedProducts.length > 0 && (
+        {/* Related Products */}
         <div className="mt-16">
-          <h2 className="text-3xl font-elegant text-gold-800 mb-8 text-center">Related Products</h2>
+          <h2 className="text-3xl font-luxury text-gold-800 mb-8 text-center">Related Products</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {relatedProducts.map(relatedProduct => (
-              <div 
-                key={relatedProduct._id} 
-                className="group bg-white rounded-2xl shadow-luxury hover:shadow-premium transition-all duration-500 transform hover:scale-105 overflow-hidden border border-gold-100"
-              >
+              <div key={relatedProduct._id} className="group bg-white rounded-2xl shadow-lg border-2 border-luxury-brown hover:shadow-gold transition-all duration-500 transform hover:scale-105 overflow-hidden">
                 <Link to={`/products/${relatedProduct._id}`} className="block">
-                  <div className="relative overflow-hidden">
-                    <img 
-                      src={relatedProduct.images[0]} 
-                      alt={relatedProduct.name} 
-                      className="h-48 w-full object-cover group-hover:scale-110 transition-transform duration-500" 
-                    />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+                  <div className="relative overflow-hidden bg-white aspect-[1/1] md:aspect-[4/3]">
+                    <img src={relatedProduct.images[0]} alt={relatedProduct.name} className="h-48 w-full object-cover group-hover:scale-110 transition-transform duration-500 rounded-t-2xl" />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 rounded-t-2xl"></div>
                     {relatedProduct.featured && (
-                      <div className="absolute top-4 left-4 bg-luxury-gradient text-white px-3 py-1 rounded-full text-xs font-premium font-semibold">
-                        Featured
-                      </div>
+                      <div className="absolute top-4 left-4 bg-tanishq-redLight text-tanishq-red px-3 py-1 rounded-full text-xs font-luxury font-semibold border border-tanishq-red pointer-events-auto">Featured</div>
                     )}
                   </div>
-                  <div className="p-4">
-                    <h3 className="text-lg font-premium font-semibold text-gold-800 mb-2 group-hover:text-gold-600 transition-colors">
-                      {relatedProduct.name}
-                    </h3>
-                    <div className="flex justify-between text-sm text-gray-600 mb-3">
-                      <span>{relatedProduct.category}</span>
-                      <span className="text-gold-600">{relatedProduct.metalType}</span>
-                    </div>
-                    <div className="text-xl font-elegant font-bold text-gold-600 text-center">
-                      NPR {relatedProduct.price.toLocaleString()}
+                  <div className="p-4 flex flex-col gap-1 sm:gap-2">
+                    <h3 className="text-base sm:text-lg font-luxury font-semibold text-luxury-brown mb-1 truncate">{relatedProduct.name}</h3>
+                    <div className="text-xs sm:text-sm text-luxury-brown mb-1">Weight: {relatedProduct.weight}g</div>
+                    <div className="text-xs sm:text-sm text-luxury-brown mb-1">Category: {relatedProduct.category}</div>
+                    <div className="mt-4 text-center">
+                      <span className="font-luxury font-extrabold text-xl sm:text-2xl" style={{ color: '#B88900', textShadow: '0 1px 8px #f3e3b0, 0 0px 2px #fff' }}>
+                        NPR {relatedProduct.price.toLocaleString()}
+                      </span>
                     </div>
                   </div>
                 </Link>
-                
                 <div className="px-4 pb-4">
-                  <button
-                    onClick={() => handleAddRelatedToCart(relatedProduct._id)}
-                    disabled={cartLoading}
-                    className="w-full bg-gold-600 text-white py-2 rounded-lg font-semibold hover:bg-gold-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {cartLoading ? 'Adding...' : 'Add to Cart'}
-                  </button>
+                  <button onClick={() => handleAddRelatedToCart(relatedProduct._id)} disabled={cartLoading} className="w-full bg-luxury-brown text-white py-2 rounded-xl font-luxury font-semibold shadow hover:bg-luxury-brown/90 transition disabled:opacity-50 disabled:cursor-not-allowed">{cartLoading ? 'Adding...' : 'Add to Cart'}</button>
                 </div>
               </div>
             ))}
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };

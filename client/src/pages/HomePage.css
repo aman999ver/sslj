@@ -1,0 +1,51 @@
+/* Gold shimmer animation */
+@keyframes shimmer {
+  0% { background-position: -500px 0; }
+  100% { background-position: 500px 0; }
+}
+.shimmer-gold {
+  background: linear-gradient(120deg, rgba(255,215,100,0.12) 0%, rgba(255,215,100,0.25) 50%, rgba(255,215,100,0.12) 100%);
+  background-size: 1000px 100%;
+  animation: shimmer 2.5s linear infinite;
+  opacity: 0.7;
+}
+
+/* Fade-in animation for sections */
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 1s ease forwards;
+}
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Luxury background pattern (subtle geometric) */
+.luxury-bg-pattern {
+  background-image: repeating-linear-gradient(135deg, #f8f5f2 0px, #f8f5f2 2px, transparent 2px, transparent 20px);
+}
+
+/* Gold shadow utility */
+.shadow-gold {
+  box-shadow: 0 4px 24px 0 rgba(255, 215, 100, 0.18), 0 1.5px 6px 0 rgba(255, 215, 100, 0.12);
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+.animate-slideInLeft {
+  animation: slideInLeft 0.3s cubic-bezier(0.4,0,0.2,1) both;
+}
+
+/* Hide scrollbar utility */
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Webkit */
+} 
